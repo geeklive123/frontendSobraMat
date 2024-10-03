@@ -39,7 +39,7 @@ const UploadProduct = () => {
     const isFormValid = productName && price && description && category && department && images.length > 0 && locationReference;
 
     return (
-        <form onSubmit={handleSubmit} className="flex flex-col md:flex-row items-center bg-yellow-500 p-20 rounded-lg shadow-lg max-w-3xl mx-auto">
+        <form onSubmit={handleSubmit} className="flex flex-col md:flex-row items-center bg-yellow-500 p-5 rounded-lg shadow-lg max-w-7xl mx-auto">
             {/* Vista previa de las imágenes */}
             <div className="flex flex-col items-center md:w-1/2 mb-4 md:mb-0">
                 <h2 className="text-2xl font-bold mb-4">Vista previa de imágenes</h2>
@@ -52,7 +52,7 @@ const UploadProduct = () => {
                     type="file"
                     multiple
                     onChange={handleImageChange}
-                    className="border border-gray-300 rounded-lg w-full p-3 focus:outline-none focus:ring-2 focus:ring-yellow-600 mt-4"
+                    className="border border-gray-300 rounded-lg w-full p-2 focus:outline-none focus:ring-2 focus:ring-yellow-600 mt-4"
                 />
             </div>
 
@@ -64,17 +64,40 @@ const UploadProduct = () => {
                     type="text"
                     value={productName}
                     onChange={(e) => setProductName(e.target.value)}
-                    className="border border-gray-300 rounded-lg w-full p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-yellow-600"
+                    className="border border-gray-300 rounded-lg w-full p-1 mb-3 focus:outline-none focus:ring-2 focus:ring-yellow-600"
                     placeholder="Nombre del producto"
                     required
                 />
+
+
+
+<select
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                    className=" border border-black bg-red-500 rounded-lg w-25 p-1 mb-3 focus:outline-none focus:ring-2 focus:ring-yellow-600"
+                    required
+                >
+                    <option value="">Seleccionar estado</option>
+
+                            <option value="nuevo">Nuevo</option>
+                            <option value="usado">Usado</option>
+
+                            {/* Agrega más opciones según sea necesario */}
+
+                </select>
+
+
+
+
+
+
 
                 <input
                     type="number"
                     value={price}
                     onChange={(e) => setPrice(e.target.value)}
                     className="border border-gray-300 rounded-lg w-full p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-yellow-600"
-                    placeholder="Precio"
+                    placeholder="ingrese el Precio"
                     required
                 />
 
@@ -85,6 +108,7 @@ const UploadProduct = () => {
                     placeholder="Descripción del producto"
                     required
                 ></textarea>
+
 
                 <select
                     value={category}
