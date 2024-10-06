@@ -9,24 +9,22 @@ const UploadProduct = () => {
     const [department, setDepartment] = useState('');
     const [images, setImages] = useState([]);
     const [locationReference, setLocationReference] = useState('');
-    const [showConfirmation, setShowConfirmation] = useState(false); // Nuevo estado para mostrar el cuadro de confirmación
-    const [showSuccessMessage, setShowSuccessMessage] = useState(false); // Nuevo estado para mostrar el mensaje de éxito
+    const [showConfirmation, setShowConfirmation] = useState(false);
+    const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
     const handleImageChange = (e) => {
         const files = Array.from(e.target.files);
         const totalImages = files.length + images.length;
 
-        // Verificar si ya se han subido 10 imágenes
         if (images.length >= 10) {
         alert('Ya has alcanzado el límite de 10 imágenes.');
-            return; // Detener la ejecución si ya hay 10 imágenes
+            return;
         }
 
-        // Limitar a un máximo de 10 imágenes
         if (totalImages > 10) {
             const remainingSlots = 10 - images.length;
             alert(`Puedes subir un máximo de 10 imágenes. Solo se tomarán las primeras ${remainingSlots} imágenes nuevas.`);
-            const limitedFiles = files.slice(0, remainingSlots); // Seleccionar solo los primeros archivos permitidos
+            const limitedFiles = files.slice(0, remainingSlots);
             const imageURLs = limitedFiles.map(file => URL.createObjectURL(file));
             setImages(prevImages => prevImages.concat(imageURLs));
         } else {
@@ -41,13 +39,13 @@ const UploadProduct = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setShowConfirmation(true);  // Muestra el mensaje de confirmación al intentar publicar
+        setShowConfirmation(true);
     };
 
     const confirmPublish = () => {
-        // Lógica para confirmar y publicar el producto
-        setShowConfirmation(false); // Oculta la confirmación
-        setShowSuccessMessage(true); // Muestra el mensaje de éxito
+
+        setShowConfirmation(false);
+        setShowSuccessMessage(true);
         console.log({
             productName,
             price,
@@ -103,7 +101,7 @@ const UploadProduct = () => {
                             multiple
                             onChange={handleImageChange}
                             className="hidden"
-                            disabled={images.length >= 10} // Deshabilitar cuando haya 10 imágenes
+                            disabled={images.length >= 10}
                         />
                         <label
                             htmlFor="file-upload"
@@ -221,7 +219,6 @@ const UploadProduct = () => {
                     </button>
                 </div>
             </form>
-            {/* Cuadro de confirmación */}
             {showConfirmation && (
                 <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
                     <div className="bg-white p-6 rounded-lg shadow-lg">
