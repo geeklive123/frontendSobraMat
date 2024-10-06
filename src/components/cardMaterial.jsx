@@ -1,7 +1,5 @@
 import React from 'react';
 
-
-// this component depends on the component listMaterial
 const CardMaterial = ({ material }) => {
     const { id, nombre, urlImage, precio, description } = material;
     return (
