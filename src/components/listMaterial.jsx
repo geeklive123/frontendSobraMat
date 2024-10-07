@@ -1,7 +1,6 @@
 import React from 'react';
 import CardMaterial from './cardMaterial';
 
-//after we have solicitud GET of backend boys;
 const listamateriales = [
     {id: 1,
      nombre: 'Material 1',
