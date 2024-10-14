@@ -60,8 +60,7 @@ const UploadProduct = () => {
         };
         axios.post('http://localhost:5173/upload', productData)
             .then(response => {
-                console.log(response.data); // Para ver la respuesta completa
-                // Verifica si la respuesta tiene un campo success
+                console.log(response.data);
                 if (response.data.success) {
                     setShowSuccessMessage(true);
                 } else {
