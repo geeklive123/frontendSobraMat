@@ -1,4 +1,7 @@
 import { useState } from 'react';
+import axios from 'axios';
+import 'font-awesome/css/font-awesome.min.css';
+
 
 const UploadProduct = () => {
     const [productName, setProductName] = useState('');
@@ -11,10 +14,12 @@ const UploadProduct = () => {
     const [locationReference, setLocationReference] = useState('');
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+    const [showForm, setShowForm] = useState(true);
 
     const handleImageChange = (e) => {
         const files = Array.from(e.target.files);
         const totalImages = files.length + images.length;
+
 
         if (images.length >= 10) {
         alert('Ya has alcanzado el límite de 10 imágenes.');
@@ -43,20 +48,44 @@ const UploadProduct = () => {
     };
 
     const confirmPublish = () => {
-
-        setShowConfirmation(false);
-        setShowSuccessMessage(true);
-        console.log({
+        const productData = {
             productName,
             price,
             description,
-            state,
             category,
+            state,
             department,
-            images,
             locationReference,
-        });
+            images
+        };
+        axios.post('http://localhost:5173/upload', productData)
+            .then(response => {
+                console.log(response.data);
+                if (response.data.success) {
+                    setShowSuccessMessage(true);
+                } else {
+                    alert(response.data.message || 'Error al publicar el producto.');
+                }
+            })
+            .catch(error => {
+                console.error('Error al subir el producto:', error);
+                alert('Ocurrió un error al publicar el producto. Inténtalo de nuevo más tarde.');
 
+            });
+        setShowConfirmation(false);
+        setProductName('');
+        setPrice('');
+        setDescription('');
+        setCategory('');
+        setState('');
+        setDepartment('');
+        setImages([]);
+        setLocationReference('');
+
+        resetForm();
+    };
+    const resetForm = () => {
+        setShowConfirmation(false);
         setProductName('');
         setPrice('');
         setDescription('');
@@ -67,12 +96,22 @@ const UploadProduct = () => {
         setLocationReference('');
     };
 
-    const isFormValid = productName && price && description && state && category && department && images.length > 0 && locationReference;
+    const isFormValid = productName && price && description && state && category && department && images.length > 0 && images.length <= 10 && /^[67]\d{7}$/.test(locationReference);
 
     return (
         <div className="bg-gray-800 min-h-screen flex items-center justify-center">
-            <form onSubmit={handleSubmit} className="flex flex-col md:flex-row justify-center items-center bg-yellow-400 p-16 rounded-lg shadow-lg max-w-7xl mx-auto mt-50 px-10">
-                <div className="border border-gray-100 bg-gray-100/65 rounded-lg w-[600px] h-[600px] mx-auto p-5 mb-30 flex flex-col items-center">
+                {showForm && (
+                    <form onSubmit={handleSubmit} className= "relative flex flex-col md:flex-row justify-center items-center bg-yellow-400 p-16 rounded-lg shadow-lg max-w-7xl mx-auto mt-50 px-10">
+                    <button
+                    type="button"
+                    onClick={() => setShowForm(false)}
+                    className="absolute top-4 right-4 bg-transparent text-gray-900 hover:text-gray-700 text-2xl font-bold focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                    </button>
+
+                    <div className="border border-gray-100 bg-gray-100/65 rounded-lg w-[600px] h-[600px] mx-auto p-5 mb-30 flex flex-col items-center">
                     <h2 className="text-2xl font-bold mb-4">Vista previa de imágenes</h2>
                     <div className="flex flex-wrap justify-center">
                         {images.map((image, index) => (
@@ -88,13 +127,11 @@ const UploadProduct = () => {
                             </div>
                         ))}
                     </div>
-
                     <div className="mt-2 text-center">
                         {images.length > 0 ? `${images.length} archivo(s) seleccionado(s)` : ' Puedes agregar un máximo de 10 fotos.'}
                     </div>
-
                     <div className="flex flex-col items-center">
-                    <input
+                        <input
                             id="file-upload"
                             type="file"
                             accept="image/*"
@@ -107,33 +144,46 @@ const UploadProduct = () => {
                             htmlFor="file-upload"
                             className={`cursor-pointer border border-gray-100 bg-gray-100/65 rounded-lg w-full p-10 mb-1 m-300 text-gray-700/50 focus:outline-none focus:ring-2 focus:ring-yellow-600 mt-1 text-center ${images.length >= 10 ? 'opacity-50 cursor-not-allowed' : ''}`}
                         >
-                            {images.length >= 10 ? 'Límite de 10 imágenes alcanzado' : 'Elegir archivo'}
+                            <div className="flex flex-col items-center ">
+                                <i className={`fa fa-image text-2xl ${images.length >= 10 ? 'text-red-500' : 'text-gray-700'}`} style={{ fontSize: '40px' }}></i>
+                                {images.length >= 10 ? 'Límite de 10 imágenes alcanzado' : 'Elegir archivo'}
+                            </div>
                         </label>
+
+
                     </div>
-                </div>
-                <div className="md:w-1/2 md:pl-4">
-                    <h1 className="text-3xl font-bold mb-6 text-center">Artículo en venta</h1>
-                    <input
-                        type="text"
-                        maxLength={40}
-                        value={productName}
-                        onChange={(e) => setProductName(e.target.value)}
-                        className="border border-gray-300 rounded-lg w-80 p-1 mb-3 focus:outline-none focus:ring-2 focus:ring-yellow-600"
-                        placeholder="Nombre del producto"
-                        required
-                    />
-                    <select
-                        value={state}
-                        onChange={(e) => setState(e.target.value)}
-                        className="border bg-gray-200/80 rounded-lg w-60 p-1 mb-5 focus:outline-none focus:ring-2 focus:ring-yellow-600 ml-5"
-                        required
-                    >
-                        <option value="">Seleccionar estado</option>
-                        <option value="nuevo">Nuevo</option>
-                        <option value="usado">Usado - Como nuevo</option>
-                        <option value="usado">Usado - Buen estado</option>
-                        <option value="usado">Usado - Aceptable</option>
-                    </select>
+                    </div>
+                    <div className="md:w-1/2 md:pl-4">
+                    <h1 className="text-3xl font-bold mb-6 text-center">Producto en venta</h1>
+                    <div className="flex items-center mb-3">
+                        <div className="relative mr-4">
+                            <input
+                                type="text"
+                                maxLength={80}
+                                value={productName}
+                                onChange={(e) => setProductName(e.target.value)}
+                                className="border border-gray-300 rounded-lg w-80 p-1 pr-12 focus:outline-none focus:ring-2 focus:ring-yellow-600"
+                                placeholder="Nombre del producto*"
+                                required
+                            />
+                            <span className="absolute right-3 top-2 text-gray-500 text-sm">
+                                {productName.length}/80
+                            </span>
+                        </div>
+
+                        <select
+                            value={state}
+                            onChange={(e) => setState(e.target.value)}
+                            className="border bg-gray-200/80 rounded-lg w-50 w-full p-1 focus:outline-none focus:ring-2 focus:ring-yellow-600"
+                            required
+                        >
+                            <option value="">Seleccionar estado*</option>
+                            <option value="nuevo">Nuevo</option>
+                            <option value="usado">Usado - Como nuevo</option>
+                            <option value="usado">Usado - Buen estado</option>
+                            <option value="usado">Usado - Aceptable</option>
+                        </select>
+                    </div>
                     <div className="flex items-center border border-gray-300 rounded-lg w-full p-3 mb-4 focus-within:ring-2 focus-within:ring-yellow-600 bg-white">
                         <span className="text-gray-500 mr-2">Bs.</span>
                         <input
@@ -146,16 +196,16 @@ const UploadProduct = () => {
                                 }
                             }}
                             className="flex-1 border-none focus:outline-none"
-                            placeholder="Ingrese el Precio"
+                            placeholder="Ingrese el Precio*"
                             required
                         />
                     </div>
                     <textarea
                         value={description}
-                        maxLength={2000}
+                        maxLength={1000}
                         onChange={(e) => setDescription(e.target.value)}
                         className="border border-gray-300 rounded-lg w-full p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-yellow-600"
-                        placeholder="Descripción del producto"
+                        placeholder="Descripción del producto*"
                         required
                     ></textarea>
                     <select
@@ -164,7 +214,7 @@ const UploadProduct = () => {
                         className="border border-gray-300 rounded-lg w-full p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-yellow-600"
                         required
                     >
-                        <option value="">Seleccionar categoría</option>
+                        <option value="">Seleccionar categoría*</option>
                         <option value="Cemento">Cemento</option>
                         <option value="Hormigón">Hormigón</option>
                         <option value="Ladrillos">Ladrillos</option>
@@ -183,7 +233,7 @@ const UploadProduct = () => {
                         className="border border-gray-300 rounded-lg w-full p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-yellow-600"
                         required
                     >
-                        <option value="">Seleccionar departamento</option>
+                        <option value="">Seleccionar departamento*</option>
                         <option value="Cochabamba">Cochabamba</option>
                         <option value="Santa Cruz">Santa Cruz</option>
                         <option value="La Paz">La Paz</option>
@@ -206,7 +256,7 @@ const UploadProduct = () => {
                                 }
                             }}
                             className="flex-1 border-none focus:outline-none"
-                            placeholder="Número de celular"
+                            placeholder="Número de celular*"
                             required
                         />
                     </div>
@@ -218,22 +268,23 @@ const UploadProduct = () => {
                         PUBLICAR
                     </button>
                 </div>
-            </form>
-            {showConfirmation && (
-                <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-                    <div className="bg-white p-6 rounded-lg shadow-lg">
-                        <h2 className="text-xl font-bold mb-4">Confirmar publicación</h2>
-                        <p>¿Estás seguro de que quieres publicar este producto?</p>
+                </form>
+        )}
+        {showConfirmation && (
+                <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+                    <div className="bg-white p-8 rounded-lg shadow-lg">
+                        <h2 className="text-xl mb-4">Confirmar publicación</h2>
+                        <p>¿Está seguro de que desea publicar el producto?</p>
                         <div className="flex justify-end mt-4">
                             <button
-                                onClick={() => setShowConfirmation(false)}
-                                className="px-4 py-2 bg-gray-500 text-white rounded-lg mr-2"
+                                onClick={resetForm}
+                                className="bg-red-500 text-white px-4 py-2 rounded-lg mr-2"
                             >
                                 Cancelar
                             </button>
                             <button
                                 onClick={confirmPublish}
-                                className="px-4 py-2 bg-green-500 text-white rounded-lg"
+                                className="bg-green-500 text-white px-4 py-2 rounded-lg"
                             >
                                 Confirmar
                             </button>
@@ -241,24 +292,26 @@ const UploadProduct = () => {
                     </div>
                 </div>
             )}
-            {showSuccessMessage && (
-                <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-                    <div className="bg-white p-6 rounded-lg shadow-lg">
-                        <h2 className="text-xl font-bold mb-4">¡Publicación exitosa!</h2>
-                        <p>Tu producto ha sido publicado correctamente.</p>
-                        <div className="flex justify-end mt-4">
-                            <button
-                                onClick={() => setShowSuccessMessage(false)}
-                                className="px-4 py-2 bg-blue-500 text-white rounded-lg"
-                            >
-                                Aceptar
-                            </button>
-                        </div>
+
+{showSuccessMessage && (
+                <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+                    <div className="bg-white p-8 rounded-lg shadow-lg">
+                        <h2 className="text-xl mb-4">¡Éxito!</h2>
+                        <p>El producto ha sido publicado con éxito.</p>
+                        <button
+                            onClick={() => {
+                                setShowSuccessMessage(false);
+                                setShowForm(true);
+                            }}
+                            className="bg-blue-500 text-white px-4 py-2 rounded-lg mt-4"
+                        >
+                            Aceptar
+                        </button>
                     </div>
                 </div>
             )}
-        </div>
-    );
+    </div>
+);
 };
 
 export default UploadProduct;
