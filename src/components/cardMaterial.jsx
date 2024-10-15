@@ -1,19 +1,38 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const CardMaterial = ({ material }) => {
-    const { id, nombre, urlImage, precio, description } = material;
-    return (
-      <div className="bg-yellow-400 rounded-lg overflow-hidden text-gray-800 transition duration-400 hover:-translate-y-2 cursor-pointer">
-        <div className="flex justify-between items-center p-4">
-         <img src={urlImage} alt={nombre} className="w-full h-48 object-cover" />
-        </div>
-        <div className="p-4">
-          <p className="font-bold text-lg mb-2">{nombre}</p>
-          <p className="font-bold text-xl mb-2">$ {precio}</p>
-          <p>{description}</p>
-        </div>
-      </div>
-    );
-  };
+    const navigate = useNavigate(); 
+
+    const handleClick = () => {
+        navigate(`/details/${material.id}`);
+    };
+
+   
+    const baseURL = 'http://localhost:5000'; 
+
   
-  export default CardMaterial;
+    const imageUrl = `${baseURL}${material.imagen_url}`;
+
+  
+    const handleImageError = (e) => {
+        e.target.src = '/path/to/placeholder-image.jpg'; 
+    };
+
+    return (
+        <div className="bg-yellow-400 p-4 rounded-lg shadow-lg cursor-pointer" onClick={handleClick}>
+            <img
+                src={imageUrl}
+                alt={material.nombre_producto}
+                className="w-full h-32 object-cover rounded-t-lg"
+                onError={handleImageError} 
+            />
+            <h3 className="text-xl text-black font-semibold mt-2">{material.nombre_producto}</h3>
+          
+            <p className="font-bold text-black">${material.precio}</p>
+        
+        </div>
+    );
+};
+
+export default CardMaterial;
