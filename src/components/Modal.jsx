@@ -5,7 +5,7 @@ const Modal = ({ isOpen, onClose, onConfirm }) => {
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-            <div className="bg-white rounded-lg shadow-lg p-5 w-80">
+            <div className="bg-yellow-500 rounded-lg shadow-lg p-5 w-80">
                 <h2 className="text-lg font-bold mb-4">Confirmar Eliminación</h2>
                 <p>¿Estás seguro de que quieres eliminar este producto? Esta acción no se puede deshacer.</p>
                 <div className="mt-4 flex justify-between">

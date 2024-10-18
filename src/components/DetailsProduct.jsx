@@ -10,7 +10,6 @@ const DetailsProduct = () => {
     const [error, setError] = useState(null); 
     const [isModalOpen, setIsModalOpen] = useState(false); 
 
-    
     const fetchProduct = async () => {
         try {
             const response = await fetch(`http://localhost:5000/products/${id}`);
@@ -55,9 +54,8 @@ const DetailsProduct = () => {
                 <div className="border border-gray-100 bg-gray-100/65 rounded-lg w-[600px] h-[600px] mx-auto p-5 mb-30 flex flex-col items-center">
                     <h2 className="text-2xl font-bold mb-4">Imagen del producto</h2>
                     <div className="flex flex-wrap justify-center">
-                      
                         {product.imagen_url ? (
-                            <img src={`http://localhost:5000${product.imagen_url}`} alt="Imagen del producto" className="w-24 h-24 object-cover rounded-lg" />
+                            <img src={`http://localhost:5000${product.imagen_url}`} alt="Imagen del producto" className="w-full h-auto max-w-full max-h-[400px] object-cover rounded-lg" />
                         ) : (
                             <p>No hay imágenes disponibles.</p>
                         )}
@@ -70,19 +68,31 @@ const DetailsProduct = () => {
                     <p className="text-lg mb-2"><strong>Categoría:</strong> {product.categoria}</p>
                     <p className="text-lg mb-2"><strong>Departamento:</strong> {product.departamento}</p>
                     <p className="text-lg mb-2"><strong>Descripción:</strong> {product.descripcion}</p>
+                    <p className="text-lg mb-2"><strong>Celular:</strong> {product.numero_celular}</p>
                     <div className="flex justify-center mt-4">
-                        <button className="bg-blue-500 text-white py-2 px-4 rounded mr-2" onClick={() => navigate(`/edit/${id}`)}>Editar</button>
-                        <button
-                            className="bg-red-500 text-white py-2 px-4 rounded"
+                        <button className=" w-full bg-green-500 text-white py-2 px-4 rounded mr-2" onClick={() => navigate(`/edit/${id}`)}>Editar</button>
+                        
+                    </div>
+                    <div className="flex justify-center mt-4">      
+                    <button
+                            className="w-full  bg-red-500 text-white py-2 px-4 rounded"
                             onClick={() => setIsModalOpen(true)}
                         >
                             Eliminar
+                        </button>
+                    </div> 
+              
+                    <div className="flex justify-center mt-4">
+                        <button 
+                            className="w-full bg-gray-500 text-white py-2 px-4 rounded"
+                            onClick={() => navigate('/listMaterial')} 
+                        >
+                            Atrás
                         </button>
                     </div>
                 </div>
             </div>
 
-         
             <Modal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)} 

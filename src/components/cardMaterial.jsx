@@ -8,13 +8,9 @@ const CardMaterial = ({ material }) => {
         navigate(`/details/${material.id}`);
     };
 
-   
     const baseURL = 'http://localhost:5000'; 
-
-  
     const imageUrl = `${baseURL}${material.imagen_url}`;
 
-  
     const handleImageError = (e) => {
         e.target.src = '/path/to/placeholder-image.jpg'; 
     };
@@ -25,12 +21,15 @@ const CardMaterial = ({ material }) => {
                 src={imageUrl}
                 alt={material.nombre_producto}
                 className="w-full h-32 object-cover rounded-t-lg"
-                onError={handleImageError} 
+                onError={handleImageError}
             />
             <h3 className="text-xl text-black font-semibold mt-2">{material.nombre_producto}</h3>
-          
             <p className="font-bold text-black">${material.precio}</p>
-        
+            
+      
+            <p className="text-lg mt-2">
+                <strong>Estado:</strong> {material.estado_producto}
+            </p>
         </div>
     );
 };
