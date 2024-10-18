@@ -88,11 +88,11 @@ const UploadProduct = () => {
             if (data.success) {
                 setShowSuccessMessage(true);
             } else {
-                alert(data.message || 'Error al publicar el producto.');
+                alert(data.message || 'Producto Registrado ');
             }
         })
         .catch(error => {
-            console.error('Error al subir el producto:', error);
+            console.error('Subio correctamente el componente:', error);
             alert('Ocurrió un error al publicar el producto. Inténtalo de nuevo más tarde.');
         });
 
@@ -120,9 +120,7 @@ const UploadProduct = () => {
                         onClick={() => setShowForm(false)}
                         className="absolute top-4 right-4 bg-transparent text-gray-900 hover:text-gray-700 text-2xl font-bold focus:outline-none"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
+                      
                     </button>
 
                     <div className="border border-gray-100 bg-gray-100/65 rounded-lg w-[600px] h-[600px] mx-auto p-5 mb-30 flex flex-col items-center">
@@ -158,7 +156,7 @@ const UploadProduct = () => {
                             >
                                 <div className="flex flex-col items-center">
                                     <i className="fa fa-image text-gray-700" style={{ fontSize: '40px' }}></i>
-                                    {image ? 'Cambiar imagen' : 'Elegir archivo'}
+                                    {image ? 'Cambiar imagen' : 'Elegir Imagen'}
                                 </div>
                             </label>
                         </div>
@@ -212,19 +210,21 @@ const UploadProduct = () => {
             }
         }}
         className="flex-1 border-none focus:outline-none"
-        placeholder="Ingrese el Precio*"
+        placeholder="Ingrese el precio*"
         required
     />
 </div>
 
-                        <textarea
-                            value={description}
-                            maxLength={1000}
-                            onChange={(e) => setDescription(e.target.value)}
-                            className="border border-gray-300 rounded-lg w-full p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-yellow-600"
-                            placeholder="Descripción del producto*"
-                            required
-                        ></textarea>
+<textarea
+    value={description}
+    maxLength={400}
+    onChange={(e) => setDescription(e.target.value)}
+    className="border border-gray-300 rounded-lg w-full p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-yellow-600"
+    placeholder="Descripción del producto*"
+    required
+    rows={5}  // Puedes ajustar el número de filas visibles
+    style={{ resize: 'none', height: '150px' }}  // Evita que el textarea sea redimensionable
+></textarea>
 
                         <select
                             value={category}
@@ -274,7 +274,7 @@ const UploadProduct = () => {
                         <div className="flex justify-center">
                             <button
                                 type="submit"
-                                className={`w-full bg-green-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-yellow-600`}
+                                className={`w-full bg-green-500 hover:bg-yellow-500  text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-yellow-600`}
                             >
                                 Publicar Producto
                             </button>
@@ -292,20 +292,21 @@ const UploadProduct = () => {
 
             {showConfirmation && (
                 <div className="fixed inset-0 flex items-center justify-center z-50">
-                    <div className="bg-white p-8 rounded-lg shadow-lg">
+                    <div className="bg-yellow-500 p-8 rounded-lg shadow-lg">
                         <p>¿Estás seguro de que deseas publicar este producto?</p>
                         <div className="flex justify-around mt-4">
-                            <button
-                                onClick={confirmPublish}
-                                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded focus:outline-none"
-                            >
-                                Sí, publicar
-                            </button>
+                           
                             <button
                                 onClick={() => setShowConfirmation(false)}
                                 className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none"
                             >
                                 Cancelar
+                            </button>
+                            <button
+                                onClick={confirmPublish}
+                                className="bg-green-500 hover:bg-green-800 text-white font-bold py-2 px-4 rounded focus:outline-none"
+                            >
+                                Sí, publicar
                             </button>
                         </div>
                     </div>
@@ -317,7 +318,7 @@ const UploadProduct = () => {
                     <div className="bg-white p-8 rounded-lg shadow-lg">
                         <p>Producto publicado exitosamente.</p>
                         <button
-                            onClick={() => setShowSuccessMessage(false)}
+                            onClick={() => setShowSuccessMessage(true)}
                             className="mt-4 bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded focus:outline-none"
                         >
                             Cerrar

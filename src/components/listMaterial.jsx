@@ -6,7 +6,7 @@ const ListMaterial = () => {
     const [productos, setProductos] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const navigate = useNavigate(); // Para redirigir a otra página
+    const navigate = useNavigate(); 
 
     const fetchProductos = async () => {
         try {
@@ -37,7 +37,7 @@ const ListMaterial = () => {
                     <h1 className="text-3xl font-bold">MIS PRODUCTOS</h1>
                     <button 
                         onClick={() => navigate('/upload')}
-                        className="bg-green-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                        className="bg-green-500 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded"
                     >
                         Registrar Producto
                     </button>

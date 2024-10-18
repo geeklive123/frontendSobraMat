@@ -18,6 +18,7 @@ const EditProduct = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [imageFile, setImageFile] = useState(null);
+    const [previewImage, setPreviewImage] = useState(''); // Para mostrar la vista previa
     const [showModal, setShowModal] = useState(false);
 
     const categorias = [
@@ -26,7 +27,7 @@ const EditProduct = () => {
         { id: 3, nombre: 'Ropa' },
     ];
 
-    const departamentos = ['La Paz','Cochabamba',  'Santa Cruz','Oruro','Potosi','Tarija','Beni','Pando','Sucre'];
+    const departamentos = ['La Paz','Cochabamba', 'Santa Cruz','Oruro','Potosi','Tarija','Beni','Pando','Sucre'];
     const estados = ['Nuevo', 'usado - como nuevo', 'usado - buen estado', 'usado - aceptable'];
 
     const fetchProduct = async () => {
@@ -38,6 +39,7 @@ const EditProduct = () => {
             const data = await response.json();
             setProduct(data);
             setOriginalProduct(data);
+            setPreviewImage(data.imagen_url); // Setear la imagen original para la vista previa
         } catch (err) {
             setError(err.message);
         } finally {
@@ -52,34 +54,48 @@ const EditProduct = () => {
     const handleChange = (e) => {
         const { name, value } = e.target;
 
-        if (name === 'nombre_producto' && value.length > 40) {
+        if (name === 'nombre_producto' && value.length > 80) { // Limitar a 80 caracteres
+            setProduct((prevProduct) => ({
+                ...prevProduct,
+                [name]: value.slice(0, 80),
+            }));
+        } else if (name === 'descripcion' && value.length > 400) { // Limitar a 400 caracteres
+            setProduct((prevProduct) => ({
+                ...prevProduct,
+                [name]: value.slice(0, 400),
+            }));
+        } else if (name === 'precio' && value < 0) {
             return; 
+        } else {
+            setProduct((prevProduct) => ({
+                ...prevProduct,
+                [name]: value,
+            }));
         }
-
-        if (name === 'descripcion' && value.length > 200) {
-            return;
-        }
-
-        if (name === 'precio' && value < 0) {
-            return;
-        }
-
-        setProduct((prevProduct) => ({
-            ...prevProduct,
-            [name]: value,
-        }));
     };
 
     const handleImageChange = (e) => {
-        setImageFile(e.target.files[0]);
+        const file = e.target.files[0];
+        setImageFile(file);
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setPreviewImage(reader.result); // Establecer la vista previa de la imagen
+            };
+            reader.readAsDataURL(file);
+        } else {
+            setPreviewImage(product.imagen_url); // Restablecer a la imagen original si no hay archivo
+        }
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
+        console.log("Submit clicked");
         setShowModal(true);
     };
 
     const confirmUpdate = async () => {
+        console.log("Confirm update called");
         const formData = new FormData();
         formData.append('nombre_producto', product.nombre_producto);
         formData.append('descripcion', product.descripcion);
@@ -92,6 +108,8 @@ const EditProduct = () => {
         if (imageFile) {
             formData.append('imagen_url', imageFile);
         }
+
+        console.log("Updating product with data:", formData);
 
         try {
             const response = await fetch(`http://localhost:5000/products/${id}`, {
@@ -109,10 +127,11 @@ const EditProduct = () => {
     };
 
     const cancelUpdate = () => {
+        console.log("Cancel update called");
         setShowModal(false);
     };
 
-    const hasChanges = JSON.stringify(product) !== JSON.stringify(originalProduct);
+    const hasChanges = Object.keys(product).some((key) => product[key] !== originalProduct[key]);
 
     if (loading) return <div>Cargando...</div>;
     if (error) return <div className="text-red-500">{error}</div>;
@@ -136,7 +155,7 @@ const EditProduct = () => {
                         onChange={handleChange}
                         className="w-full p-2 rounded bg-white-900 text-gray-500 border border-gray-600"
                         required
-                        maxLength="40"
+                        maxLength="80"
                     />
                 </div>
                 <div className="mb-4">
@@ -149,7 +168,7 @@ const EditProduct = () => {
                         onChange={handleChange}
                         className="w-full p-2 rounded bg-white-900 text-gray-500 border border-gray-600"
                         required
-                        maxLength="200"
+                        maxLength="400"
                     />
                 </div>
                 <div className="mb-4">
@@ -225,7 +244,7 @@ const EditProduct = () => {
                 </div>
                 <div className="mb-4">
                     <label className="block mb-2 text-white" htmlFor="numero_celular">
-                        Número de Celular <span className="text-red-500">*</span>
+                        Número de celular <span className="text-red-500">*</span>
                     </label>
                     <input
                         type="text"
@@ -238,49 +257,45 @@ const EditProduct = () => {
                 </div>
                 <div className="mb-4">
                     <label className="block mb-2 text-white" htmlFor="imagen_url">
-                        Subir Imagen
+                        Imagen
                     </label>
                     <input
                         type="file"
-                        name="imagen_url"
                         accept="image/*"
                         onChange={handleImageChange}
-                        className="w-full p-2 rounded bg-white-900 text-gray-500 border border-gray-600"
+                        className="p-2 rounded bg-white-900 text-gray-500 border border-gray-600"
                     />
+                    {previewImage && <img src={previewImage} alt="Vista previa" className="mt-2 w-full h-auto" />}
                 </div>
-
-                {product.imagen_url && (
-                    <div className="mb-4">
-                        <label className="block mb-2 text-white">Imagen Actual</label>
-                        <img
-                            src={product.imagen_url}
-                            alt="Imagen del producto"
-                            className="w-full h-auto rounded"
-                        />
-                    </div>
-                )}
-                <div className="flex justify-between">
-                    <button type="button" onClick={() => navigate(-1)} className="bg-red-500 p-2 rounded text-white hover:bg-red-600">
-                        Cancelar
-                    </button>
-                    <button 
-                        type="submit" 
-                        className="bg-green-500 p-2 rounded text-white hover:bg-green-600" 
-                        disabled={!hasChanges}
-                    >
-                        Actualizar Producto
-                    </button>
-                </div>
+                <button
+                    type="submit"
+                    className={`w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded ${!hasChanges ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    disabled={!hasChanges}
+                >
+                    Actualizar Producto
+                </button>
             </form>
 
+            {/* Modal de Confirmación */}
             {showModal && (
-                <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-                    <div className="bg-yellow-500 p-5 rounded shadow-lg text-center">
-                        <h2 className="text-lg font-bold mb-4">Confirmar Actualización</h2>
+                <div className="fixed inset-0 flex items-center justify-center z-50">
+                    <div className="bg-black bg-opacity-50 absolute inset-0"></div>
+                    <div className="bg-white text-black p-5 rounded shadow-lg z-10">
+                        <h2 className="text-xl font-bold mb-4">Confirmar Actualización</h2>
                         <p>¿Estás seguro de que deseas actualizar este producto?</p>
-                        <div className="mt-4">
-                            <button onClick={cancelUpdate} className="bg-red-500 p-2 rounded mr-2">Cancelar</button>
-                            <button onClick={confirmUpdate} className="bg-green-500 p-2 rounded text-white">Confirmar</button>
+                        <div className="mt-4 flex justify-end">
+                            <button
+                                onClick={confirmUpdate}
+                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
+                            >
+                                Confirmar
+                            </button>
+                            <button
+                                onClick={cancelUpdate}
+                                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                            >
+                                Cancelar
+                            </button>
                         </div>
                     </div>
                 </div>
