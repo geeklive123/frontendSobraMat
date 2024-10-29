@@ -274,6 +274,9 @@ const EditProduct = () => {
                 >
                     Actualizar Producto
                 </button>
+                <button type="button" onClick={() => navigate(-1)} className="`w-full bg-red-500 p-2 rounded text-white hover:bg-red-600">
+                        Cancelar
+                    </button>
             </form>
 
             {/* Modal de Confirmación */}
