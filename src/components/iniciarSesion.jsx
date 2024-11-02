@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '../UserContext'; // Importa el hook del contexto
 
 const InicioSesion = () => {
+  const { setUser } = useUser(); // Usa el hook para obtener setUser
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
@@ -27,8 +29,11 @@ const InicioSesion = () => {
       const data = await response.json();
       console.log('Inicio de sesión exitoso', data);
 
+      // Guardar los datos del usuario en el contexto
+      setUser(data.user); // Asegúrate de que 'data.user' contenga la información del usuario
+
       // Redirige a la página principal después del inicio de sesión exitoso
-      navigate('/filtro'); // Redirige a la página deseada
+      navigate('/listMaterial'); // Redirige a la página deseada
 
     } catch (error) {
       console.error('Error:', error);

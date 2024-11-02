@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -73,7 +75,8 @@ const Register = () => {
         if (response.ok) {
           setSuccessMessage('Registro exitoso. Puedes iniciar sesión.');
           setErrorMessage('');
-          setFormData({ username: '', email: '', password: '', confirmPassword: '' }); // Limpiar formulario
+          setFormData({ username: '', email: '', password: '', confirmPassword: '' });
+          navigate('/login'); // Redirigir a la página de inicio de sesión
         } else {
           setErrorMessage(data.error || 'Error en el registro');
           setSuccessMessage('');

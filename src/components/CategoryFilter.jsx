@@ -1,15 +1,48 @@
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'font-awesome/css/font-awesome.min.css';
 
 const CategoryFilter = () => {
+    const [productos, setProductos] = useState([]); // Todos los productos
+    const [productosFiltrados, setProductosFiltrados] = useState([]); // Productos después del filtro
     const [estado, setEstado] = useState('');
     const [categoria, setCategoria] = useState('');
     const [precio, setPrecio] = useState(5000); // Valor inicial
     const [departamento, setDepartamento] = useState('');
 
+    useEffect(() => {
+        // Cargar todos los productos desde el backend
+        const fetchProductos = async () => {
+            const response = await fetch('http://localhost:5000/products/all');
+            const data = await response.json();
+            setProductos(data);
+            setProductosFiltrados(data); // Inicialmente, los productos filtrados son todos
+        };
+
+        fetchProductos();
+    }, []);
+
     const handleFilterSubmit = (e) => {
         e.preventDefault();
-        console.log({ estado, categoria, precio, departamento });
+
+        let filteredProducts = productos;
+
+        if (estado) {
+            filteredProducts = filteredProducts.filter(product => product.estado === estado);
+        }
+
+        if (categoria) {
+            filteredProducts = filteredProducts.filter(product => product.categoria === categoria);
+        }
+
+        if (departamento) {
+            filteredProducts = filteredProducts.filter(product => product.departamento === departamento);
+        }
+
+        if (precio) {
+            filteredProducts = filteredProducts.filter(product => product.precio <= precio);
+        }
+
+        setProductosFiltrados(filteredProducts); // Actualiza los productos filtrados
     };
 
     const incrementarPrecio = () => {
@@ -38,7 +71,7 @@ const CategoryFilter = () => {
 
     return (
         <div className="flex flex-col md:flex-row h-screen">
-            {/* Sección de Filtros con barra de desplazamiento */}
+            {/* Sección de Filtros */}
             <div className="w-full md:w-1/4 p-4 bg-[#F2A649]" style={{ overflowY: 'auto', maxHeight: '100vh' }}>
                 <h2 className="font-bold text-lg mb-4">FILTRAR</h2>
                 <form onSubmit={handleFilterSubmit}>
@@ -50,7 +83,6 @@ const CategoryFilter = () => {
                                 <label
                                     key={item}
                                     className={`flex items-center mb-2 p-2 rounded ${estado === item ? 'bg-gray-300' : ''}`}
-                                    style={{ backgroundColor: estado === item ? 'rgba(0, 0, 0, 0.1)' : 'transparent' }}
                                 >
                                     <input
                                         type="checkbox"
@@ -64,7 +96,7 @@ const CategoryFilter = () => {
                         </div>
                     </div>
 
-         
+                    {/* Categoría */}
                     <div className="mb-4 border-b border-black pb-4">
                         <h3 className="block mb-2 uppercase bg-gray-800 text-white p-2">SELECCIONAR CATEGORÍA*</h3>
                         <div className="flex flex-col">
@@ -72,7 +104,6 @@ const CategoryFilter = () => {
                                 <label
                                     key={item}
                                     className={`flex items-center mb-2 p-2 rounded ${categoria === item ? 'bg-gray-300' : ''}`}
-                                    style={{ backgroundColor: categoria === item ? 'rgba(0, 0, 0, 0.1)' : 'transparent' }}
                                 >
                                     <input
                                         type="checkbox"
@@ -118,7 +149,6 @@ const CategoryFilter = () => {
                                 <label
                                     key={item}
                                     className={`flex items-center mb-2 p-2 rounded ${departamento === item ? 'bg-gray-300' : ''}`}
-                                    style={{ backgroundColor: departamento === item ? 'rgba(0, 0, 0, 0.1)' : 'transparent' }}
                                 >
                                     <input
                                         type="checkbox"
@@ -136,28 +166,32 @@ const CategoryFilter = () => {
                 </form>
             </div>
 
-            {/* Sección de Productos Filtrados con barra de desplazamiento */}
+            {/* Sección de Productos Filtrados */}
             <div className="flex-grow p-4" style={{ overflowY: 'auto', maxHeight: '100vh' }}>
                 <h2 className="font-bold text-xl">PRODUCTOS FILTRADOS</h2>
                 <div className="border border-gray-300 bg-[#F2EAC2] p-4 mt-4 rounded">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        {[1, 2, 3, 4, 5, 6].map((index) => (
-                            <div key={index} className="border border-gray-300 bg-white p-2 rounded flex flex-col items-center">
-                                <div className="w-full h-0 pb-[100%] relative">
-                                    <img
-                                        src={`ruta/a/imagen${index}.jpg`}
-                                        alt={`Producto ${index}`}
-                                        className="absolute top-0 left-0 w-full h-full object-cover rounded"
-                                    />
+                        {productosFiltrados.length > 0 ? (
+                            productosFiltrados.map((producto) => (
+                                <div key={producto.id} className="border border-gray-300 bg-white p-2 rounded flex flex-col items-center">
+                                    <div className="w-full h-0 pb-[100%] relative">
+                                        <img
+                                            src={producto.imagen_url} // Cambia esta propiedad según tu modelo
+                                            alt={producto.nombre_producto} // Cambia esta propiedad según tu modelo
+                                            className="absolute top-0 left-0 w-full h-full object-cover rounded"
+                                        />
+                                    </div>
+                                    <div className="mt-2 text-center">
+                                        <p>{producto.nombre_producto}</p> // Cambia esta propiedad según tu modelo
+                                        <p>Precio: ${producto.precio}</p> // Cambia esta propiedad según tu modelo
+                                        <p>Estado: {producto.estado}</p> // Cambia esta propiedad según tu modelo
+                                        <p>Departamento: {producto.departamento}</p> // Cambia esta propiedad según tu modelo
+                                    </div>
                                 </div>
-                                <div className="mt-2 text-center">
-                                    <p>Producto {index}</p>
-                                    <p>Precio: ${index * 1000}</p>
-                                    <p>Estado: Usado</p>
-                                    <p>Departamento: Cochabamba</p>
-                                </div>
-                            </div>
-                        ))}
+                            ))
+                        ) : (
+                            <p>No se encontraron productos.</p>
+                        )}
                     </div>
                 </div>
             </div>

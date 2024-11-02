@@ -6,11 +6,11 @@ const ListMaterial = () => {
     const [productos, setProductos] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const navigate = useNavigate(); 
+    const navigate = useNavigate();
 
-    const fetchProductos = async () => {
+    const fetchProductos = async (usuarioId) => {
         try {
-            const response = await fetch('http://localhost:5000/products/');
+            const response = await fetch(`http://localhost:5000/products/usuario/${usuarioId}`);
             if (!response.ok) {
                 throw new Error('Error al cargar los productos');
             }
@@ -24,8 +24,20 @@ const ListMaterial = () => {
     };
 
     useEffect(() => {
-        fetchProductos();
+        // Obtener el ID del usuario logueado
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user && user.id) {
+            console.log('ID del usuario logueado:', user.id);
+            fetchProductos(user.id); // Llama a la función para obtener los productos del usuario
+        } else {
+            console.log('No hay usuario logueado.');
+        }
     }, []);
+
+    const handleLogout = () => {
+        localStorage.removeItem('user'); // Elimina los datos del usuario
+        navigate('/iniciarSesion'); // Redirige a la página de inicio de sesión
+    };
 
     if (loading) return <div>Cargando...</div>;
     if (error) return <div className="text-red-500">{error}</div>;
@@ -35,12 +47,20 @@ const ListMaterial = () => {
             <div className="max-w-6xl mx-auto">
                 <div className="flex justify-between items-center mb-6">
                     <h1 className="text-3xl font-bold">MIS PRODUCTOS</h1>
-                    <button 
-                        onClick={() => navigate('/upload')}
-                        className="bg-green-500 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded"
-                    >
-                        Registrar Producto
-                    </button>
+                    <div className="flex space-x-4">
+                        <button 
+                            onClick={() => navigate('/upload')}
+                            className="bg-green-500 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded"
+                        >
+                            Registrar Producto
+                        </button>
+                        <button 
+                            onClick={handleLogout}
+                            className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+                        >
+                            Cerrar Sesión
+                        </button>
+                    </div>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">

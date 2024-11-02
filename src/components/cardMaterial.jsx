@@ -9,10 +9,13 @@ const CardMaterial = ({ material }) => {
     };
 
     const baseURL = 'http://localhost:5000'; 
-    const imageUrl = `${baseURL}${material.imagen_url}`;
+    const imageUrl = material.imagen_url.startsWith('http') ? 
+                     material.imagen_url : 
+                     `${baseURL}${material.imagen_url}`;
 
     const handleImageError = (e) => {
         e.target.src = '/path/to/placeholder-image.jpg'; 
+        console.error("Error loading image:", imageUrl);
     };
 
     return (
@@ -25,8 +28,6 @@ const CardMaterial = ({ material }) => {
             />
             <h3 className="text-xl text-black font-semibold mt-2">{material.nombre_producto}</h3>
             <p className="font-bold text-black">${material.precio}</p>
-            
-      
             <p className="text-lg mt-2">
                 <strong>Estado:</strong> {material.estado_producto}
             </p>

@@ -37,7 +37,7 @@ const DetailsProduct = () => {
             if (!response.ok) {
                 throw new Error('Error al eliminar el producto');
             }
-            navigate('/'); 
+            navigate('/listMaterial'); 
         } catch (err) {
             setError(err.message);
         } finally {
@@ -50,8 +50,8 @@ const DetailsProduct = () => {
 
     return (
         <div className="bg-gray-800 min-h-screen flex items-center justify-center">
-            <div className="flex flex-col md:flex-row justify-center items-center bg-yellow-400 p-16 rounded-lg shadow-lg max-w-7xl mx-auto mt-50 px-10">
-                <div className="border border-gray-100 bg-gray-100/65 rounded-lg w-[600px] h-[600px] mx-auto p-5 mb-30 flex flex-col items-center">
+            <div className="flex flex-col md:flex-row justify-center items-center bg-yellow-400 p-16 rounded-lg shadow-lg max-w-7xl mx-auto mt-10 px-10">
+                <div className="border border-gray-100 bg-gray-100/65 rounded-lg w-[600px] h-[600px] mx-auto p-5 mb-10 flex flex-col items-center">
                     <h2 className="text-2xl font-bold mb-4">Imagen del producto</h2>
                     <div className="flex flex-wrap justify-center">
                         {product.imagen_url ? (
@@ -70,18 +70,16 @@ const DetailsProduct = () => {
                     <p className="text-lg mb-2"><strong>Descripción:</strong> {product.descripcion}</p>
                     <p className="text-lg mb-2"><strong>Celular:</strong> {product.numero_celular}</p>
                     <div className="flex justify-center mt-4">
-                        <button className=" w-full bg-green-500 text-white py-2 px-4 rounded mr-2" onClick={() => navigate(`/edit/${id}`)}>Editar</button>
-                        
+                        <button className="w-full bg-green-500 text-white py-2 px-4 rounded mr-2" onClick={() => navigate(`/edit/${id}`)}>Editar</button>
                     </div>
                     <div className="flex justify-center mt-4">      
-                    <button
-                            className="w-full  bg-red-500 text-white py-2 px-4 rounded"
+                        <button
+                            className="w-full bg-red-500 text-white py-2 px-4 rounded"
                             onClick={() => setIsModalOpen(true)}
                         >
                             Eliminar
                         </button>
                     </div> 
-              
                     <div className="flex justify-center mt-4">
                         <button 
                             className="w-full bg-gray-500 text-white py-2 px-4 rounded"
