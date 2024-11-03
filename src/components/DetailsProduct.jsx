@@ -48,6 +48,11 @@ const DetailsProduct = () => {
     if (loading) return <div>Cargando...</div>; 
     if (error) return <div className="text-red-500">{error}</div>; 
 
+    const baseURL = 'http://localhost:5000';
+    const imageUrl = product.imagen_url && product.imagen_url.startsWith('http') ? 
+                     product.imagen_url : 
+                     `${baseURL}${product.imagen_url}`;
+
     return (
         <div className="bg-gray-800 min-h-screen flex items-center justify-center">
             <div className="flex flex-col md:flex-row justify-center items-center bg-yellow-400 p-16 rounded-lg shadow-lg max-w-7xl mx-auto mt-10 px-10">
@@ -55,7 +60,7 @@ const DetailsProduct = () => {
                     <h2 className="text-2xl font-bold mb-4">Imagen del producto</h2>
                     <div className="flex flex-wrap justify-center">
                         {product.imagen_url ? (
-                            <img src={`http://localhost:5000${product.imagen_url}`} alt="Imagen del producto" className="w-full h-auto max-w-full max-h-[400px] object-cover rounded-lg" />
+                            <img src={imageUrl} alt="Imagen del producto" className="w-full h-auto max-w-full max-h-[400px] object-cover rounded-lg" />
                         ) : (
                             <p>No hay imágenes disponibles.</p>
                         )}

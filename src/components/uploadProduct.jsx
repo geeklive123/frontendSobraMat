@@ -23,12 +23,8 @@ const UploadProduct = () => {
         if (file) {
             const validFormats = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/svg+xml'];
             if (validFormats.includes(file.type)) {
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                    setImage(reader.result);
-                    setErrorMessage('');
-                };
-                reader.readAsDataURL(file);
+                setImage(file);
+                setErrorMessage('');
             } else {
                 setErrorMessage('Formato de imagen no permitido. Por favor sube una imagen válida.');
             }
@@ -65,31 +61,26 @@ const UploadProduct = () => {
     };
 
     const confirmPublish = () => {
-        // Recupera el ID del usuario desde localStorage
         const user = JSON.parse(localStorage.getItem('user'));
         if (!user) {
             alert('No hay usuario logueado. Por favor, inicie sesión.');
             return;
         }
 
-        const productData = {
-            nombre_producto: productName,
-            estado_producto: state,
-            descripcion: description,
-            precio: parseFloat(price),
-            categoria_id: category,
-            departamento: department,
-            numero_celular: locationReference,
-            imagen_url: image,
-            usuario_id: user.id // Aquí pasas el ID del usuario
-        };
+        const formData = new FormData();
+        formData.append('nombre_producto', productName);
+        formData.append('estado_producto', state);
+        formData.append('descripcion', description);
+        formData.append('precio', parseFloat(price));
+        formData.append('categoria_id', category);
+        formData.append('departamento', department);
+        formData.append('numero_celular', locationReference);
+        formData.append('imagen_url', image); // 'image' debe ser un Blob o File.
+        formData.append('usuario_id', user.id);
 
         fetch('http://localhost:5000/products/agregar-producto', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(productData),
+            body: formData,
         })
         .then(response => response.json())
         .then(data => {
@@ -136,7 +127,7 @@ const UploadProduct = () => {
                         <div className="flex flex-wrap justify-center">
                             {image && (
                                 <div className="relative m-2">
-                                    <img src={image} alt="Vista previa" className="w-full h-auto object-cover rounded-lg" />
+                                    <img src={URL.createObjectURL(image)} alt="Vista previa" className="w-full h-auto object-cover rounded-lg" />
                                     <button
                                         onClick={() => setImage(null)} 
                                         className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
@@ -241,9 +232,9 @@ const UploadProduct = () => {
                             required
                         >
                             <option value="">Seleccionar categoría*</option>
-                            <option value="1">Electrónica</option>
-                            <option value="2">Muebles</option>
-                            <option value="3">Ropa</option>
+                            <option value="1">Herramientas</option>
+                            <option value="2">Materiales de construcción</option>
+                            <option value="3">Equipos eléctricos</option>
                         </select>
 
                         <input

@@ -16,7 +16,7 @@ const App = () => {
 
   return (
     <div className="App">
-      {!isAuthPage && <CustomNavbar />} {/* Mostrar el navbar solo si no es una página de autenticación */}
+      {!isAuthPage && <CustomNavbar />} 
       <Routes>
         <Route path="/" element={<InicioSesion />} />
         <Route path="/upload" element={<UploadProduct />} />

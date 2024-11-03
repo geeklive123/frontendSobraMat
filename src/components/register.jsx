@@ -76,7 +76,7 @@ const Register = () => {
           setSuccessMessage('Registro exitoso. Puedes iniciar sesión.');
           setErrorMessage('');
           setFormData({ username: '', email: '', password: '', confirmPassword: '' });
-          navigate('/login'); // Redirigir a la página de inicio de sesión
+          navigate('/login'); 
         } else {
           setErrorMessage(data.error || 'Error en el registro');
           setSuccessMessage('');
