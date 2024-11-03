@@ -9,6 +9,10 @@ const InicioSesion = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
+  const handleInicioSesion= () => {
+    navigate('/registro'); 
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -81,7 +85,15 @@ const InicioSesion = () => {
           
           {error && <p className="text-red-500 text-center mt-2">{error}</p>}
         </form>
+        <button
+            type="submit"
+            className="w-full py-2 mt-4 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300"
+            onClick={handleInicioSesion}
+          >
+           Crer Cuenta
+          </button>
       </div>
+      
     </div>
   );
 };
