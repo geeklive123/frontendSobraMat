@@ -12,7 +12,7 @@ const DetailsProduct = () => {
 
     const fetchProduct = async () => {
         try {
-            const response = await fetch(`http://localhost:5000/products/${id}`);
+            const response = await fetch(`https://sobramat-services.onrender.com/products/${id}`);
             if (!response.ok) {
                 throw new Error('Error al cargar el producto');
             }

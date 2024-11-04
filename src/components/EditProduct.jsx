@@ -112,7 +112,7 @@ const EditProduct = () => {
         console.log("Updating product with data:", formData);
 
         try {
-            const response = await fetch(`http://localhost:5000/products/${id}`, {
+            const response = await fetch(`https://sobramat-services.onrender.com/products/${id}`, {
                 method: 'PUT',
                 body: formData,
             });
@@ -267,16 +267,24 @@ const EditProduct = () => {
                     />
                     {previewImage && <img src={previewImage} alt="Vista previa" className="mt-2 w-full h-auto" />}
                 </div>
-                <button
-                    type="submit"
-                    className={`w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded ${!hasChanges ? 'opacity-50 cursor-not-allowed' : ''}`}
-                    disabled={!hasChanges}
-                >
-                    Actualizar Producto
-                </button>
-                <button type="button" onClick={() => navigate(-1)} className="`w-full bg-red-500 p-2 rounded text-white hover:bg-red-600">
-                        Cancelar
-                    </button>
+                <div className="flex justify-between mt-4">
+    
+    <button
+        type="button"
+        onClick={() => navigate(-1)}
+        className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+    >
+        Cancelar
+    </button>
+    <button
+        type="submit"
+        className={`bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded ${!hasChanges ? 'opacity-50 cursor-not-allowed' : ''}`}
+        disabled={!hasChanges}
+    >
+        Actualizar Producto
+    </button>
+</div>
+               
             </form>
 
             {/* Modal de Confirmación */}

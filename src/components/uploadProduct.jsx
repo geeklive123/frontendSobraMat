@@ -78,7 +78,7 @@ const UploadProduct = () => {
         formData.append('imagen_url', image); // 'image' debe ser un Blob o File.
         formData.append('usuario_id', user.id);
 
-        fetch('http://localhost:5000/products/agregar-producto', {
+        fetch('https://sobramat-services.onrender.com/products/agregar-producto', {
             method: 'POST',
             body: formData,
         })

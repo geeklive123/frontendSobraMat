@@ -8,7 +8,7 @@ const CardMaterial = ({ material }) => {
         navigate(`/details/${material.id}`);
     };
 
-    const baseURL = 'http://localhost:5000'; 
+    const baseURL = 'https://sobramat-services.onrender.com'; 
     const imageUrl = material.imagen_url.startsWith('http') ? 
                      material.imagen_url : 
                      `${baseURL}${material.imagen_url}`;

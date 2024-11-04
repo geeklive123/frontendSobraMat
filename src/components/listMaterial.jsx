@@ -10,7 +10,7 @@ const ListMaterial = () => {
 
     const fetchProductos = async (usuarioId) => {
         try {
-            const response = await fetch(`http://localhost:5000/products/usuario/${usuarioId}`);
+            const response = await fetch(`https://sobramat-services.onrender.com/products/usuario/${usuarioId}`);
             if (!response.ok) {
                 throw new Error('Error al cargar los productos');
             }
@@ -24,19 +24,19 @@ const ListMaterial = () => {
     };
 
     useEffect(() => {
-        // Obtener el ID del usuario logueado
+      
         const user = JSON.parse(localStorage.getItem('user'));
         if (user && user.id) {
             console.log('ID del usuario logueado:', user.id);
-            fetchProductos(user.id); // Llama a la función para obtener los productos del usuario
+            fetchProductos(user.id); 
         } else {
             console.log('No hay usuario logueado.');
         }
     }, []);
 
     const handleLogout = () => {
-        localStorage.removeItem('user'); // Elimina los datos del usuario
-        navigate('/iniciarSesion'); // Redirige a la página de inicio de sesión
+        localStorage.removeItem('user'); 
+        navigate('/iniciarSesion'); 
     };
 
     if (loading) return <div>Cargando...</div>;
