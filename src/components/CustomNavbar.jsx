@@ -1,21 +1,36 @@
 
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaShoppingCart, FaBookmark, FaSearch, FaBars, FaTimes } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
+
+
+
 const CustomNavbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [myUser,setMyUser] = useState(false);
   const navigate = useNavigate(); 
+
+  useEffect(() => {
+      
+    const user = JSON.parse(localStorage.getItem('user'));
+    setMyUser(user);
+}, []); 
+
+
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  const handleRedirectToUpload = () => {
+    navigate('/upload'); 
+  };
+
   const handleRedirectToProducts = () => {
     navigate('/ListMaterial'); 
   };
-
   const handleRedirectToStore = () => {
     navigate('/filtro'); 
   };
@@ -49,7 +64,9 @@ const CustomNavbar = () => {
         <button onClick={handleRedirectToStore} className="text-white px-3 py-1 rounded hover:bg-[#08545b] transition">
           Tienda
         </button>
-      
+        <button onClick={handleRedirectToUpload} className="text-white px-3 py-1 rounded hover:bg-[#08545b] transition">
+            Crear Producto
+          </button>
       </div>
 
   
@@ -86,7 +103,9 @@ const CustomNavbar = () => {
           <button onClick={handleRedirectToStore} className="text-white px-3 py-1 rounded hover:bg-[#08545b] transition">
             Tienda
           </button>
-          
+          <button onClick={handleRedirectToUpload} className="text-white px-3 py-1 rounded hover:bg-[#08545b] transition">
+            Crear Producto
+          </button>
         
           <div className="flex items-center bg-gray-100 rounded-full w-10/12">
             <input
@@ -106,6 +125,9 @@ const CustomNavbar = () => {
               <FaBookmark />
             </a>
           </div>
+      {myUser && (
+        <p className='text-center text-black' >  {myUser.nombre_usuario || "" }</p>
+      )}
           <button onClick={handleLogout} className="bg-yellow-500 text-gray-800 px-4 py-1 rounded hover:bg-yellow-600 transition">
             Cerrar Sesión
           </button>

@@ -32,7 +32,7 @@ const EditProduct = () => {
 
     const fetchProduct = async () => {
         try {
-            const response = await fetch(`http://localhost:5000/products/${id}`);
+            const response = await fetch(`https://sobramat-services.onrender.com/products/${id}`);
             if (!response.ok) {
                 throw new Error('Error al cargar el producto');
             }
@@ -95,6 +95,11 @@ const EditProduct = () => {
     };
 
     const confirmUpdate = async () => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (!user) {
+            alert('No hay usuario logueado. Por favor, inicie sesión.');
+            return;
+        }
         console.log("Confirm update called");
         const formData = new FormData();
         formData.append('nombre_producto', product.nombre_producto);
@@ -104,6 +109,7 @@ const EditProduct = () => {
         formData.append('categoria_id', product.categoria_id);
         formData.append('departamento', product.departamento);
         formData.append('numero_celular', product.numero_celular);
+        formData.append('usuario_id', user.id);
 
         if (imageFile) {
             formData.append('imagen_url', imageFile);
@@ -112,7 +118,7 @@ const EditProduct = () => {
         console.log("Updating product with data:", formData);
 
         try {
-            const response = await fetch(`https://sobramat-services.onrender.com/products/${id}`, {
+            const response = await fetch(`https://sobramat-services.onrender.com/products/edit/${id}`, {
                 method: 'PUT',
                 body: formData,
             });

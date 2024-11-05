@@ -19,7 +19,7 @@ const CategoryFilter = () => {
     useEffect(() => {
     
         const fetchProductos = async () => {
-            const response = await fetch('https://sobramat-services.onrender.com/products/all');
+            const response = await fetch('https://sobramat-services.onrender.com/products/');
             const data = await response.json();
             setProductos(data);
             setProductosFiltrados(data); 

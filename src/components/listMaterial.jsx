@@ -10,7 +10,7 @@ const ListMaterial = () => {
 
     const fetchProductos = async (usuarioId) => {
         try {
-            const response = await fetch(`https://sobramat-services.onrender.com/products/usuario/${usuarioId}`);
+            const response = await fetch(`https://sobramat-services.onrender.com/products/by-user/${usuarioId}`);
             if (!response.ok) {
                 throw new Error('Error al cargar los productos');
             }
