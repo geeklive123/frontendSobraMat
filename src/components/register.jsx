@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import logo from '../assets/logo.png'; 
+import backgroundImage from '../assets/imagenREGISTRARSE.jpeg';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -24,18 +26,21 @@ const Register = () => {
 
   const validateField = (name, value) => {
     let errorMessages = { ...errors };
+    
     if (name === 'username') {
       if (!value) errorMessages.username = 'Este campo es obligatorio';
       else if (/[^a-zA-Z\s]/.test(value)) errorMessages.username = 'El nombre no puede contener caracteres especiales';
       else if (value.length > 15) setFormData({ ...formData, username: value.slice(0, 15) });
       else delete errorMessages.username;
     }
+
     if (name === 'email') {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
       if (!value) errorMessages.email = 'Este campo es obligatorio';
       else if (!emailRegex.test(value)) errorMessages.email = 'El correo debe cumplir con el formato alias@gmail.com';
       else delete errorMessages.email;
     }
+
     if (name === 'password') {
       const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])/;
       if (!value) errorMessages.password = 'Este campo es obligatorio';
@@ -43,10 +48,12 @@ const Register = () => {
       else if (value.length < 8) errorMessages.password = 'La contraseña debe tener al menos 8 caracteres';
       else delete errorMessages.password;
     }
+
     if (name === 'confirmPassword') {
       if (value !== formData.password) errorMessages.confirmPassword = 'Las contraseñas no coinciden';
       else delete errorMessages.confirmPassword;
     }
+
     setErrors(errorMessages);
     validateForm();
   };
@@ -94,7 +101,7 @@ const Register = () => {
   const toggleShowConfirmPassword = () => setShowConfirmPassword(!showConfirmPassword);
 
   return (
-    <div className="relative flex items-center justify-center h-screen bg-cover bg-center" style={{ backgroundImage: 'url(/imageniniregister.jpeg)' }}>
+    <div className="relative flex items-center justify-center h-screen bg-cover bg-center" style={{ backgroundImage: `url(${backgroundImage})` }}>
       <div
         style={{
           position: 'absolute',
@@ -106,19 +113,23 @@ const Register = () => {
           zIndex: 0,
         }}
       ></div>
-
+      <div className="absolute top-20"> 
+        <img 
+          src={logo} 
+          alt="Logo"
+          className="h-24 w-auto mx-auto"
+        />
+      </div>
       <div className="flex flex-col items-center space-y-4 z-10 p-4">
-        <img src="/logo.png" alt="Descripción de la imagen" className="mb-4" style={{ maxWidth: '100px' }} />
-        
         <h2 className="text-3xl font-light text-white text-center mb-2">REGÍSTRATE</h2>
 
         {successMessage && <p className="text-green-500">{successMessage}</p>}
         {errorMessage && <p className="text-red-500">{errorMessage}</p>}
 
-        <div className="bg-yellow-500 p-4 rounded-lg shadow-lg w-full max-w-sm">
+        <div className="bg-yellow-500 p-6 rounded-lg shadow-lg w-full max-w-lg">
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label className="block text-gray-700 font-bold mb-2">Nombre de Usuario</label>
+              <label className="block text-gray-700 font-bold mb-2">Nombre de Usuario <span className="text-red-500">*</span></label>
               <input
                 type="text"
                 name="username"
@@ -130,7 +141,7 @@ const Register = () => {
               {errors.username && <p className="text-red-500 text-sm">{errors.username}</p>}
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700 font-bold mb-2">Correo Electrónico</label>
+              <label className="block text-gray-700 font-bold mb-2">Correo Electrónico <span className="text-red-500">*</span></label>
               <input
                 type="email"
                 name="email"
@@ -142,8 +153,8 @@ const Register = () => {
               {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700 font-bold mb-2">Contraseña</label>
-              <div className="relative">
+              <label className="block text-gray-700 font-bold mb-2">Contraseña <span className="text-red-500">*</span></label>
+              <div className="relative flex items-center">
                 <input
                   type={showPassword ? 'text' : 'password'}
                   name="password"
@@ -163,8 +174,8 @@ const Register = () => {
               {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700 font-bold mb-2">Confirmar Contraseña</label>
-              <div className="relative">
+              <label className="block text-gray-700 font-bold mb-2">Confirmar Contraseña <span className="text-red-500">*</span></label>
+              <div className="relative flex items-center">
                 <input
                   type={showConfirmPassword ? 'text' : 'password'}
                   name="confirmPassword"
@@ -188,7 +199,7 @@ const Register = () => {
               className={`bg-black text-white w-full py-2 rounded-lg ${isFormValid ? 'hover:bg-teal-900' : 'opacity-50 cursor-not-allowed'}`}
               disabled={!isFormValid}
             >
-              Registrarse
+              Crear Cuenta
             </button>
           </form>
         </div>

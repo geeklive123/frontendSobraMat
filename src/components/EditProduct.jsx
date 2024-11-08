@@ -20,11 +20,12 @@ const EditProduct = () => {
     const [imageFile, setImageFile] = useState(null);
     const [previewImage, setPreviewImage] = useState(''); // Para mostrar la vista previa
     const [showModal, setShowModal] = useState(false);
+    const [showCancelModal, setShowCancelModal] = useState(false); // Nuevo estado para el modal de cancelación
 
     const categorias = [
-        { id: 1, nombre: 'Electrónica' },
-        { id: 2, nombre: 'Muebles' },
-        { id: 3, nombre: 'Ropa' },
+        { id: 1, nombre: 'Herramientas' },
+        { id: 2, nombre: 'Materiales de construccion' },
+        { id: 3, nombre: 'Equipos' },
     ];
 
     const departamentos = ['La Paz','Cochabamba', 'Santa Cruz','Oruro','Potosi','Tarija','Beni','Pando','Sucre'];
@@ -53,7 +54,7 @@ const EditProduct = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-
+    
         if (name === 'nombre_producto' && value.length > 80) { // Limitar a 80 caracteres
             setProduct((prevProduct) => ({
                 ...prevProduct,
@@ -64,8 +65,13 @@ const EditProduct = () => {
                 ...prevProduct,
                 [name]: value.slice(0, 400),
             }));
-        } else if (name === 'precio' && value < 0) {
-            return; 
+        } else if (name === 'precio') {
+            // Limitar el precio a un máximo de 5000
+            const numericValue = Math.max(0, Math.min(value, 5000)); // Asegura que el precio no sea mayor que 5000 ni menor que 0
+            setProduct((prevProduct) => ({
+                ...prevProduct,
+                [name]: numericValue,
+            }));
         } else {
             setProduct((prevProduct) => ({
                 ...prevProduct,
@@ -133,8 +139,15 @@ const EditProduct = () => {
     };
 
     const cancelUpdate = () => {
-        console.log("Cancel update called");
-        setShowModal(false);
+        setShowCancelModal(true); // Muestra el modal de cancelación
+    };
+
+    const confirmCancel = () => {
+        navigate(-1); // Regresa a la página anterior
+    };
+
+    const rejectCancel = () => {
+        setShowCancelModal(false); // Cierra el modal y sigue en la página actual
     };
 
     const hasChanges = Object.keys(product).some((key) => product[key] !== originalProduct[key]);
@@ -175,6 +188,9 @@ const EditProduct = () => {
                         className="w-full p-2 rounded bg-white-900 text-gray-500 border border-gray-600"
                         required
                         maxLength="400"
+                        style={{
+                            resize: 'none'
+                        }}
                     />
                 </div>
                 <div className="mb-4">
@@ -249,69 +265,81 @@ const EditProduct = () => {
                     </select>
                 </div>
                 <div className="mb-4">
-                    <label className="block mb-2 text-white" htmlFor="numero_celular">
-                        Número de celular <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                        type="text"
-                        name="numero_celular"
-                        value={product.numero_celular}
-                        onChange={handleChange}
-                        className="w-full p-2 rounded bg-white-900 text-gray-500 border border-gray-600"
-                        required
-                    />
-                </div>
-                <div className="mb-4">
                     <label className="block mb-2 text-white" htmlFor="imagen_url">
-                        Imagen
+                        Imagen del producto <span className="text-red-500">*</span>
                     </label>
                     <input
                         type="file"
-                        accept="image/*"
+                        name="imagen_url"
                         onChange={handleImageChange}
-                        className="p-2 rounded bg-white-900 text-gray-500 border border-gray-600"
+                        className="w-full p-2 rounded bg-white-900 text-gray-500 border border-gray-600"
                     />
-                    {previewImage && <img src={previewImage} alt="Vista previa" className="mt-2 w-full h-auto" />}
+                    {previewImage && (
+                        <div className="mt-2">
+                            <img src={previewImage} alt="Vista previa" className="w-full h-auto" />
+                        </div>
+                    )}
                 </div>
-                <div className="flex justify-between mt-4">
-    
-    <button
-        type="button"
-        onClick={() => navigate(-1)}
-        className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
-    >
-        Cancelar
-    </button>
-    <button
-        type="submit"
-        className={`bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded ${!hasChanges ? 'opacity-50 cursor-not-allowed' : ''}`}
-        disabled={!hasChanges}
-    >
-        Actualizar Producto
-    </button>
-</div>
-               
+                <div className="flex justify-between">
+                    <button
+                        type="button"
+                        onClick={cancelUpdate}
+                        className="text-white bg-red-500 p-2 rounded"
+                    >
+                        Cancelar
+                    </button>
+                    <button
+                        type="submit"
+                        disabled={!hasChanges}
+                        className={`p-2 rounded ${hasChanges ? 'bg-green-500' : 'bg-gray-400'} text-white`}
+                    >
+                        Actualizar
+                    </button>
+                </div>
             </form>
 
             {/* Modal de Confirmación */}
             {showModal && (
-                <div className="fixed inset-0 flex items-center justify-center z-50">
-                    <div className="bg-black bg-opacity-50 absolute inset-0"></div>
-                    <div className="bg-white text-black p-5 rounded shadow-lg z-10">
-                        <h2 className="text-xl font-bold mb-4">Confirmar Actualización</h2>
-                        <p>¿Estás seguro de que deseas actualizar este producto?</p>
-                        <div className="mt-4 flex justify-end">
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                    <div className="bg-white p-6 rounded-lg shadow-lg">
+                        <h2 className="text-black text-xl font-semibold mb-4">¿Estás seguro?</h2>
+                        <p className=" text-black mb-4">¿Quieres actualizar este producto?</p>
+                        <div className="flex justify-end">
                             <button
                                 onClick={confirmUpdate}
-                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
+                                className="bg-green-500 text-white p-3 rounded mr-3"
                             >
-                                Confirmar
+                                Sí
                             </button>
                             <button
-                                onClick={cancelUpdate}
-                                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                onClick={() => setShowModal(false)}
+                                className="bg-red-500 text-white p-3 rounded"
                             >
-                                Cancelar
+                                No
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Modal de Confirmación de Cancelación */}
+            {showCancelModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                    <div className="bg-white p-6 rounded-lg shadow-lg">
+                        <h2 className="text-black text-xl font-semibold mb-4">Confirmacion</h2>
+                        <p className=" text-black mb-4">Todos los cambios realizados no se guardaran ¿Desea Continuar?</p>
+                        <div className="flex justify-end">
+                            <button
+                                onClick={confirmCancel}
+                                className="bg-red-500 text-white p-2 rounded mr-2"
+                            >
+                                Sí,Cancelar
+                            </button>
+                            <button
+                                onClick={rejectCancel}
+                                className="bg-green-500 text-white p-2 rounded"
+                            >
+                               Seguir editando
                             </button>
                         </div>
                     </div>

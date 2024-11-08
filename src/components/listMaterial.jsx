@@ -6,6 +6,7 @@ const ListMaterial = () => {
     const [productos, setProductos] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [user, setUser] = useState(null);
     const navigate = useNavigate();
 
     const fetchProductos = async (usuarioId) => {
@@ -24,19 +25,20 @@ const ListMaterial = () => {
     };
 
     useEffect(() => {
-      
-        const user = JSON.parse(localStorage.getItem('user'));
-        if (user && user.id) {
-            console.log('ID del usuario logueado:', user.id);
-            fetchProductos(user.id); 
+        const storedUser = JSON.parse(localStorage.getItem('user'));
+        if (storedUser && storedUser.id) {
+            setUser(storedUser);
+            fetchProductos(storedUser.id);
         } else {
             console.log('No hay usuario logueado.');
+            navigate('/iniciarSesion'); // Redirige si no hay usuario logueado
         }
-    }, []);
+    }, [navigate]);
 
     const handleLogout = () => {
         localStorage.removeItem('user'); 
-        navigate('/iniciarSesion'); 
+        setUser(null);
+        navigate('/iniciarSesion');
     };
 
     if (loading) return <div>Cargando...</div>;
@@ -47,20 +49,7 @@ const ListMaterial = () => {
             <div className="max-w-6xl mx-auto">
                 <div className="flex justify-between items-center mb-6">
                     <h1 className="text-3xl font-bold">MIS PRODUCTOS</h1>
-                    <div className="flex space-x-4">
-                        <button 
-                            onClick={() => navigate('/upload')}
-                            className="bg-green-500 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded"
-                        >
-                            Registrar Producto
-                        </button>
-                        <button 
-                            onClick={handleLogout}
-                            className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
-                        >
-                            Cerrar Sesión
-                        </button>
-                    </div>
+                   
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
