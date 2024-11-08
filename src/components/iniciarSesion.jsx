@@ -52,18 +52,23 @@ const InicioSesion = () => {
       className="min-h-screen bg-cover bg-center flex flex-col justify-center items-center"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
-      {/* Contenedor para el logo y el texto, con margen superior para separar */}
-      <div className="absolute top-20"> 
+      {/* Capa oscura encima de la imagen de fondo */}
+      <div 
+        className="absolute top-0 left-0 right-0 bottom-0 bg-black opacity-50 z-0"
+      ></div>
+
+      {/* Contenedor para el logo y el título */}
+      <div className="flex flex-col justify-center items-center mt-10 sm:mt-20 mb-8 z-10">
         <img 
           src={logo} 
           alt="Logo"
-          className="h-24 w-auto mx-auto"  // Asegura que el logo se alinee al centro
+          className="h-24 w-auto mb-4 mx-auto"  // Asegura que el logo se alinee al centro
         />
-        <h2 className="text-2xl font-semibold text-yellow-400 mb-4 text-center">INICIAR SESIÓN</h2>
+        <h2 className="text-2xl font-semibold text-yellow-400 text-center">INICIAR SESIÓN</h2>
       </div>
 
       {/* Formulario de inicio de sesión */}
-      <div className="w-full max-w-md p-8 space-y-6 bg-opacity-80 bg-yellow-400 rounded-lg shadow-md">
+      <div className="w-full max-w-md p-8 space-y-6 bg-[#F2A649] rounded-lg shadow-md mt-6 sm:mt-10 mb-4 sm:mb-0 z-10">
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-600">Correo Electrónico</label>
@@ -100,7 +105,7 @@ const InicioSesion = () => {
 
           <button
             type="submit"
-            className="w-full py-2 mt-4 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300"
+            className="w-full py-2 mt-4 text-white bg-[#012E40] rounded-lg hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300"
           >
             Iniciar Sesión
           </button>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.png'; 
 import backgroundImage from '../assets/imagenREGISTRARSE.jpeg';
@@ -17,16 +17,53 @@ const Register = () => {
   const [isFormValid, setIsFormValid] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [isEmailRegistered, setIsEmailRegistered] = useState(false); // Para verificar si el correo ya está registrado
+
+  // Se ejecuta cuando el correo cambia
+  useEffect(() => {
+    if (formData.email) {
+      // Verificar si el correo ya está registrado
+      checkEmailAvailability(formData.email);
+    }
+  }, [formData.email]);
+
+  // Mostrar advertencia cuando el usuario intente salir sin haber completado el formulario
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      if (Object.values(formData).some((value) => value)) {
+        const message = "Tienes cambios no guardados. ¿Estás seguro de que quieres salir?";
+        event.returnValue = message; // Esto mostrará el mensaje en algunos navegadores
+        return message;
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    // Limpieza al desmontar el componente
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [formData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    // Prevenir espacios en blanco en el nombre de usuario y correo
+    if (value.includes(" ")) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [name]: 'El campo no puede contener espacios.',
+      }));
+      return; // No actualizar el estado si hay espacios
+    }
+
     setFormData({ ...formData, [name]: value });
     validateField(name, value);
   };
 
   const validateField = (name, value) => {
     let errorMessages = { ...errors };
-    
+
     if (name === 'username') {
       if (!value) errorMessages.username = 'Este campo es obligatorio';
       else if (/[^a-zA-Z\s]/.test(value)) errorMessages.username = 'El nombre no puede contener caracteres especiales';
@@ -58,13 +95,28 @@ const Register = () => {
     validateForm();
   };
 
+  const checkEmailAvailability = async (email) => {
+    try {
+      const response = await fetch(`https://sobramat-services.onrender.com/auth/check-email?email=${email}`);
+      const data = await response.json();
+      setIsEmailRegistered(data.isRegistered); // Se actualiza el estado del correo registrado
+    } catch (error) {
+      console.error('Error al verificar el correo:', error);
+    }
+  };
+
   const validateForm = () => {
-    setIsFormValid(Object.keys(errors).length === 0 && Object.values(formData).every((val) => val !== ''));
+    // Validamos si el formulario es válido considerando los errores y campos no vacíos
+    setIsFormValid(
+      Object.keys(errors).length === 0 &&
+      Object.values(formData).every((val) => val !== '') && // Asegurarse de que todos los campos estén completos
+      !isEmailRegistered // El correo no debe estar registrado
+    );
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isFormValid) {
+    if (isFormValid && !isEmailRegistered) {
       try {
         const response = await fetch('https://sobramat-services.onrender.com/auth/register', {
           method: 'POST',
@@ -89,11 +141,11 @@ const Register = () => {
           setSuccessMessage('');
         }
       } catch (error) {
-        setErrorMessage('Error al comunicarse con el servidor');
+        setErrorMessage('Ese correo ya está registrado');
         setSuccessMessage('');
       }
     } else {
-      console.log('Please fill all required fields correctly');
+      console.log('Por favor, llena todos los campos correctamente');
     }
   };
 
@@ -151,6 +203,7 @@ const Register = () => {
                 onChange={handleChange}
               />
               {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+              {isEmailRegistered && <p className="text-red-500 text-sm">Este correo ya está registrado</p>}
             </div>
             <div className="mb-4">
               <label className="block text-gray-700 font-bold mb-2">Contraseña <span className="text-red-500">*</span></label>
@@ -197,7 +250,7 @@ const Register = () => {
             <button
               type="submit"
               className={`bg-black text-white w-full py-2 rounded-lg ${isFormValid ? 'hover:bg-teal-900' : 'opacity-50 cursor-not-allowed'}`}
-              disabled={!isFormValid}
+              disabled={!isFormValid || isEmailRegistered}
             >
               Crear Cuenta
             </button>
