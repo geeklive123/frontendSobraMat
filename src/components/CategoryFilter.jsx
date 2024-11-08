@@ -228,7 +228,7 @@ const CategoryFilter = () => {
                             </div>
                         </div>
 
-                        <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">Aplicar filtros</button>
+                        <button type="submit" className="mt-4 w-full bg-blue-500 text-white py-2 px-4 rounded">Aplicar filtros</button>
                     </form>
                 )}
 
