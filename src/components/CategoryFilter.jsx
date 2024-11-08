@@ -18,8 +18,8 @@ const CategoryFilter = () => {
     const [precioMaximo, setPrecioMaximo] = useState(5000);
     const [precioMinimo, setPrecioMinimo] = useState(0);
     const [departamentoSeleccionado, setDepartamentoSeleccionado] = useState([]);
-    const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(true); // Controla si el panel está visible
-    const [precioError, setPrecioError] = useState(false); // Estado para controlar el error de los precios
+    const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(true);
+    const [precioError, setPrecioError] = useState(false);
 
     useEffect(() => {
         const fetchProductos = async () => {
@@ -90,7 +90,6 @@ const CategoryFilter = () => {
         setPrecioError(false); // Restablecer el estado de error
     };
 
-    // Validación de los precios (el precio mínimo no puede ser mayor que el máximo)
     const handlePrecioMinimoChange = (e) => {
         const value = parseInt(e.target.value);
         if (value > precioMaximo) {
@@ -109,6 +108,17 @@ const CategoryFilter = () => {
             setPrecioError(false);
         }
         setPrecioMaximo(value);
+    };
+
+    // Función para verificar si hay filtros activos
+    const isAnyFilterActive = () => {
+        return (
+            estadoSeleccionado.length > 0 ||
+            categoriaSeleccionada.length > 0 ||
+            departamentoSeleccionado.length > 0 ||
+            precioMinimo > 0 ||
+            precioMaximo < 5000
+        );
     };
 
     return (
@@ -245,7 +255,7 @@ const CategoryFilter = () => {
             {/* Botón para mostrar el panel de filtros si está oculto */}
             {!isFilterPanelOpen && (
                 <button
-                    className="fixed bottom-5 right-5 bg-[#F2A649] text-white py-2 px-4 rounded-full shadow-lg"
+                    className="fixed top-5 left-5 bg-[#F2A649] text-white py-2 px-4 rounded-full shadow-lg z-50"
                     onClick={() => setIsFilterPanelOpen(true)}
                 >
                     Mostrar filtros
@@ -254,7 +264,9 @@ const CategoryFilter = () => {
 
             {/* Mostrar los productos filtrados */}
             <div className="flex-grow p-4" style={{ overflowY: 'auto', maxHeight: '100vh' }}>
-                <h2 className="font-bold text-xl">TIENDA</h2>
+                <h2 className="font-bold text-xl">
+                    {isAnyFilterActive() ? 'FILTRADOS RECIENTES' : 'TIENDA'}
+                </h2>
                 <div className="border border-gray-300 bg-[#F2EAC2] p-4 mt-4 rounded">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         {productosFiltrados.length > 0 ? (
@@ -268,7 +280,7 @@ const CategoryFilter = () => {
                                         />
                                     </div>
                                     <div className="mt-2 text-center">
-                                        <p>Nombre: {producto.nombre_producto}</p> 
+                                        <p>Nombre: {producto.nombre_producto}</p>
                                         <p>Precio: ${producto.precio}</p>
                                         <p>Estado: {producto.estado_producto}</p>
                                         <p>Departamento: {producto.departamento}</p> 
