@@ -285,21 +285,30 @@ const EditProduct = () => {
                     />
                 </div>
                 <div className="mb-4">
-                    <label className="block mb-2 text-black" htmlFor="imagen_url">
-                        Imagen del producto <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                        type="file"
-                        name="imagen_url"
-                        onChange={handleImageChange}
-                        className="w-full p-2 rounded bg-white-900 text-gray-500 border border-gray-600"
-                    />
-                    {previewImage && (
-                        <div className="mt-2">
-                            <img src={previewImage} alt="Vista previa" className="w-full h-auto" />
-                        </div>
-                    )}
-                </div>
+    <label className="block mb-2 text-black" htmlFor="imagen_url">
+       
+    </label>
+    <div className="relative">
+        <input
+            type="file"
+            name="imagen_url"
+            id="imagen_url"
+            onChange={handleImageChange}
+            className="hidden" // Ocultar el input
+        />
+        <label
+            htmlFor="imagen_url"
+            className="cursor-pointer bg-blue-500 text-white py-2 px-4 rounded-lg text-center inline-block"
+        >
+            Cambiar imagen
+        </label>
+    </div>
+    {previewImage && (
+        <div className="mt-2">
+            <img src={previewImage} alt="Vista previa" className="w-full h-auto" />
+        </div>
+    )}
+</div>
                 <div className="flex justify-between">
                     <button
                         type="button"
