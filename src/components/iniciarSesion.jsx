@@ -96,10 +96,10 @@ const InicioSesion = () => {
             />
             <button
               type="button"
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 mt-3 mr-2"
               onClick={() => setShowPassword(!showPassword)} // Alterna el estado para mostrar/ocultar la contraseña
             >
-              {showPassword ? <FaEyeSlash /> : <FaEye />} {/* Muestra un icono dependiendo del estado */}
+              {showPassword ? <FaEyeSlash size={15} /> : <FaEye size={15} />} {/* Muestra un icono dependiendo del estado */}
             </button>
           </div>
 
