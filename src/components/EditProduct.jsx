@@ -298,7 +298,7 @@ const EditProduct = () => {
         />
         <label
             htmlFor="imagen_url"
-            className="cursor-pointer bg-blue-500 text-white py-2 px-4 rounded-lg text-center inline-block"
+            className="cursor-pointer bg-green-500 text-white py-2 px-4 rounded-lg text-center inline-block"
         >
             Cambiar imagen
         </label>
