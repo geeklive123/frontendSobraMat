@@ -26,6 +26,9 @@ const CategoryFilter = () => {
         const fetchProductos = async () => {
             try {
                 const response = await fetch('https://sobramat-services.onrender.com/products/');
+                const responseCategorias = await fetch('https://sobramat-services.onrender.com/categories');
+                const responseCategoriasData = await responseCategorias.json();
+                console.log(responseCategoriasData)
                 if (!response.ok) throw new Error('Error fetching data');
                 
                 const data = await response.json();
