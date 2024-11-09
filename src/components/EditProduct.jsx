@@ -23,7 +23,7 @@ const EditProduct = () => {
     const [showCancelModal, setShowCancelModal] = useState(false); 
     const [categorias, setCategorias] = useState([]);  // Nuevo estado para las categorías
 
-    const departamentos = ['La Paz', 'Cochabamba', 'Santa Cruz', 'Oruro', 'Potosi', 'Tarija', 'Beni', 'Pando', 'Sucre'];
+    const departamentos = ['La Paz', 'Cochabamba', 'Santa Cruz', 'Oruro', 'Potosí', 'Tarija', 'Beni', 'Pando', 'Sucre'];
     const estados = ['Nuevo', 'Usado - Como Nuevo', 'Usado - Buen Estado', 'Usado - Aceptable'];
 
     // Función para obtener las categorías

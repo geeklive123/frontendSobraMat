@@ -42,7 +42,7 @@ const CustomNavbar = ({ setIsLoggedIn }) => {
   return (
     <nav className="bg-[#06333c] px-4 py-2 flex items-center justify-between">
       <a href="#" className="flex items-center space-x-2">
-        <img src="https://www.construrama.com/_ui/responsive/common/images/logo_construrama_com_blanco.png" alt="Logo" className="h-10" />
+        <img src="https://thumbs.dreamstime.com/b/house-logo-constructor-abstract-design-vector-lines-house-logo-constructor-abstract-design-vector-lines-web-icons-illustration-339248637.jpg" alt="Logo" className="h-10" />
       </a>
 
       <button
