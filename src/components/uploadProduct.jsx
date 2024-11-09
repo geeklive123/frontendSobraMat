@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'font-awesome/css/font-awesome.min.css';
 
@@ -15,8 +15,27 @@ const UploadProduct = () => {
     const [showSuccessMessage, setShowSuccessMessage] = useState(false);
     const [showForm, setShowForm] = useState(true);
     const [errorMessage, setErrorMessage] = useState('');
+    const [categoryOptions, setCategoryOptions] = useState([]); // Estado para almacenar categorías
 
     const navigate = useNavigate();
+
+    // Efecto para obtener las categorías
+    useEffect(() => {
+        fetch('https://sobramat-services.onrender.com/categories/')
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error('Error al obtener las categorías: ' + response.statusText);
+            }
+            return response.json();
+          })
+          .then((data) => {
+            setCategoryOptions(data);  // Asumiendo que setCategoryOptions es tu función para actualizar el estado
+          })
+          .catch((error) => {
+            console.error('Error al obtener las categorías:', error);
+            setErrorMessage('Ocurrió un error al cargar las categorías.');
+          });
+      }, []);
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -87,7 +106,8 @@ const UploadProduct = () => {
             if (data.success) {
                 setShowSuccessMessage(true);
             } else {
-                alert(data.message || 'Producto no registrado.');
+                alert(data.message || 'Producto  registrado.');
+              
             }
         })
         .catch(error => {
@@ -232,9 +252,11 @@ const UploadProduct = () => {
                             required
                         >
                             <option value="">Seleccionar categoría*</option>
-                            <option value="1">Herramientas</option>
-                            <option value="2">Materiales de construcción</option>
-                            <option value="3">Equipos eléctricos</option>
+                            {categoryOptions.map((cat) => (
+                                <option key={cat.id} value={cat.id}>
+                                    {cat.nombre}
+                                </option>
+                            ))}
                         </select>
 
                         <input
