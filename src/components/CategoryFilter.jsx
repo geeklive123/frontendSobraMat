@@ -4,14 +4,14 @@ import 'font-awesome/css/font-awesome.min.css';
 const CategoryFilter = () => {
     const [productos, setProductos] = useState([]);
     const [productosFiltrados, setProductosFiltrados] = useState([]);
+    const [categorias, setCategorias] = useState([]);
+    const [departamentos, setDepartamentos] = useState([
+        'Cochabamba', 'Santa Cruz', 'La Paz', 'Tarija', 'Potosí', 
+        'Chuquisaca', 'Beni', 'Pando', 'Oruro'
+    ]); // Departamentos estáticos
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const [categorias] = useState([
-        { id: 'herramientas', nombre: 'Herramientas' },
-        { id: 'materiales', nombre: 'Materiales de construcción' },
-        { id: 'equipos', nombre: 'Equipos eléctricos' }
-    ]);
     const [estados] = useState(['Nuevo', 'Usado - Como Nuevo', 'Usado - Buen Estado', 'Usado - Aceptable']);
     const [estadoSeleccionado, setEstadoSeleccionado] = useState([]);
     const [categoriaSeleccionada, setCategoriaSeleccionada] = useState([]);
@@ -21,6 +21,7 @@ const CategoryFilter = () => {
     const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(true);
     const [precioError, setPrecioError] = useState(false);
 
+    // Llamada para obtener productos
     useEffect(() => {
         const fetchProductos = async () => {
             try {
@@ -37,6 +38,39 @@ const CategoryFilter = () => {
             }
         };
         fetchProductos();
+    }, []);
+
+    // Llamada para obtener las categorías
+    useEffect(() => {
+        const fetchCategorias = async () => {
+            try {
+                const response = await fetch('https://sobramat-services.onrender.com/categories/');
+                if (!response.ok) throw new Error('Error fetching categories');
+                
+                const data = await response.json();
+                setCategorias(data); // Guardar las categorías en el estado
+            } catch (err) {
+                setError(err.message);
+            }
+        };
+        fetchCategorias();
+    }, []);
+
+    // Llamada para obtener el rango de precios
+    useEffect(() => {
+        const fetchPrecios = async () => {
+            try {
+                const response = await fetch('https://sobramat-services.onrender.com/products/price-range');
+                if (!response.ok) throw new Error('Error fetching price range');
+                
+                const data = await response.json();
+                setPrecioMinimo(data.min); // Suponiendo que la API retorna un objeto { min: 0, max: 5000 }
+                setPrecioMaximo(data.max); 
+            } catch (err) {
+                setError(err.message);
+            }
+        };
+        fetchPrecios();
     }, []);
 
     const handleFilterSubmit = (e) => {
@@ -125,9 +159,7 @@ const CategoryFilter = () => {
         <div className="flex flex-col md:flex-row h-screen relative">
             {/* Panel de filtros */}
             <div
-                className={`transition-all duration-300 ease-in-out w-full md:w-1/4 p-4 bg-[#F2A649] ${
-                    isFilterPanelOpen ? 'block' : 'hidden'
-                }`}
+                className={`transition-all duration-300 ease-in-out w-full md:w-1/4 p-4 bg-[#F2A649] ${isFilterPanelOpen ? 'block' : 'hidden'}`}
                 style={{ overflowY: 'auto', maxHeight: '100vh' }}
             >
                 <div className="flex justify-between items-center mb-4">
@@ -137,9 +169,9 @@ const CategoryFilter = () => {
                         onClick={() => setIsFilterPanelOpen(!isFilterPanelOpen)}
                     >
                         {isFilterPanelOpen ? (
-                            <i className="fa fa-chevron-left"></i> // Icono para cerrar el panel
+                            <i className="fa fa-chevron-left"></i>
                         ) : (
-                            <span className="text-black">Mostrar filtros</span> // Texto para mostrar el panel
+                            <span className="text-black">Mostrar filtros</span>
                         )}
                     </button>
                 </div>
@@ -221,7 +253,7 @@ const CategoryFilter = () => {
                         <div className="mb-4 pb-4">
                             <h3 className="block mb-2 uppercase bg-gray-800 text-white p-2">SELECCIONAR DEPARTAMENTO*</h3>
                             <div className="flex flex-col">
-                                {['Cochabamba', 'Santa Cruz', 'La Paz', 'Tarija', 'Potosí', 'Chuquisaca', 'Beni', 'Pando', 'Oruro'].map((item) => (
+                                {departamentos.map((item) => (
                                     <label
                                         key={item}
                                         className={`flex items-center mb-2 p-2 rounded ${departamentoSeleccionado.includes(item) ? 'bg-gray-300' : ''}`}
@@ -283,7 +315,7 @@ const CategoryFilter = () => {
                                         <p>Nombre: {producto.nombre_producto}</p>
                                         <p>Precio: ${producto.precio}</p>
                                         <p>Estado: {producto.estado_producto}</p>
-                                        <p>Departamento: {producto.departamento}</p> 
+                                        <p>Departamento: {producto.departamento}</p>
                                     </div>
                                 </div>
                             ))
