@@ -221,7 +221,7 @@ const CategoryFilter = () => {
                         <div className="mb-4 pb-4">
                             <h3 className="block mb-2 uppercase bg-gray-800 text-white p-2">SELECCIONAR DEPARTAMENTO*</h3>
                             <div className="flex flex-col">
-                                {['Cochabamba', 'Santa cruz', 'La Paz', 'Tarija', 'Potosí', 'Chuquisaca', 'Beni', 'Pando', 'Oruro'].map((item) => (
+                                {['Cochabamba', 'Santa Cruz', 'La Paz', 'Tarija', 'Potosí', 'Chuquisaca', 'Beni', 'Pando', 'Oruro'].map((item) => (
                                     <label
                                         key={item}
                                         className={`flex items-center mb-2 p-2 rounded ${departamentoSeleccionado.includes(item) ? 'bg-gray-300' : ''}`}

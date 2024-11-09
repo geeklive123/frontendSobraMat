@@ -29,7 +29,7 @@
         ];
 
         const departamentos = ['La Paz', 'Cochabamba', 'Santa Cruz', 'Oruro', 'Potosi', 'Tarija', 'Beni', 'Pando', 'Sucre'];
-        const estados = ['Nuevo', 'usado - como nuevo', 'usado - buen estado', 'usado - aceptable'];
+        const estados = ['Nuevo', 'Usado - Como Nuevo', 'Usado - Buen Estado', 'Usado - Aceptable'];
 
         const fetchProduct = async () => {
             try {
@@ -316,7 +316,7 @@
                 {/* Modal de confirmación */}
                 {showModal && (
                     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
-                        <div className="bg-white p-5 rounded shadow-lg w-96">
+                        <div className="bg-yellow-500 p-5 rounded shadow-lg w-96">
                             <h2 className="text-xl font-bold">Confirmación</h2>
                             <p>¿Estás seguro de que deseas actualizar el producto?</p>
                             <div className="mt-4 flex justify-end">
@@ -340,7 +340,7 @@
                 {/* Modal de cancelación */}
                 {showCancelModal && (
                     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
-                        <div className="bg-yellow p-5 rounded shadow-lg w-96">
+                        <div className="bg-yellow-500 p-5 rounded shadow-lg w-96">
                             <h2 className="text-xl font-bold">Cancelar cambios</h2>
                             <p>¿Estás seguro de que deseas cancelar la actualización?</p>
                             <div className="mt-4 flex justify-end">

@@ -189,10 +189,10 @@ const UploadProduct = () => {
                                 required
                             >
                                 <option value="">Seleccionar estado*</option>
-                                <option value="nuevo">Nuevo</option>
-                                <option value="usado - como nuevo">Usado - Como nuevo</option>
-                                <option value="usado - buen estado">Usado - Buen estado</option>
-                                <option value="usado - aceptable">Usado - Aceptable</option>
+                                <option value="Nuevo">Nuevo</option>
+                                <option value="Usado - Como Nuevo">Usado - Como nuevo</option>
+                                <option value="Usado - Buen Estado">Usado - Buen estado</option>
+                                <option value="Usado - Aceptable">Usado - Aceptable</option>
                             </select>
                         </div>
 
