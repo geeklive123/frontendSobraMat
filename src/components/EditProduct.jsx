@@ -318,53 +318,52 @@ const EditProduct = () => {
                 </div>
             </form>
 
-            {/* Modal de confirmación */}
             {showModal && (
-                <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
-                    <div className="bg-yellow-500 p-5 rounded shadow-lg w-96">
-                        <h2 className="text-xl font-bold">Confirmación</h2>
-                        <p>¿Estás seguro de que deseas actualizar el producto?</p>
-                        <div className="mt-4 flex justify-end">
-                            <button
-                                onClick={confirmUpdate}
-                                className="bg-green-500 text-white px-4 py-2 rounded mr-2"
-                            >
-                                Sí, actualizar
-                            </button>
-                            <button
-                                onClick={() => setShowModal(false)}
-                                className="bg-red-500 text-white px-4 py-2 rounded"
-                            >
-                                No, cancelar
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
+    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+        <div className="bg-white p-5 rounded shadow-lg w-96 text-black">
+            <h2 className="text-xl font-bold">Confirmación</h2>
+            <p>¿Estás seguro de que deseas actualizar el producto?</p>
+            <div className="mt-4 flex justify-end">
+                <button
+                    onClick={confirmUpdate}
+                    className="bg-green-500 text-white px-4 py-2 rounded mr-2"
+                >
+                    Sí, actualizar
+                </button>
+                <button
+                    onClick={() => setShowModal(false)}
+                    className="bg-red-500 text-white px-4 py-2 rounded"
+                >
+                    No, cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+)}
 
-            {/* Modal de cancelación */}
-            {showCancelModal && (
-                <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
-                    <div className="bg-yellow-500 p-5 rounded shadow-lg w-96">
-                        <h2 className="text-xl font-bold">Cancelar cambios</h2>
-                        <p>¿Estás seguro de que deseas cancelar la actualización?</p>
-                        <div className="mt-4 flex justify-end">
-                            <button
-                                onClick={confirmCancel}
-                                className="bg-green-500 text-white px-4 py-2 rounded mr-2"
-                            >
-                                Sí, cancelar
-                            </button>
-                            <button
-                                onClick={rejectCancel}
-                                className="bg-red-500 text-white px-4 py-2 rounded"
-                            >
-                                No, continuar
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
+{/* Modal de cancelación */}
+{showCancelModal && (
+    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+        <div className="bg-white p-5 rounded shadow-lg w-96 text-black">
+            <h2 className="text-xl font-bold">Cancelar cambios</h2>
+            <p>¿Estás seguro de que deseas cancelar la actualización?</p>
+            <div className="mt-4 flex justify-end">
+                <button
+                    onClick={confirmCancel}
+                    className="bg-green-500 text-white px-4 py-2 rounded mr-2"
+                >
+                    Sí, cancelar
+                </button>
+                <button
+                    onClick={rejectCancel}
+                    className="bg-red-500 text-white px-4 py-2 rounded"
+                >
+                    No, continuar
+                </button>
+            </div>
+        </div>
+    </div>
+)}
         </div>
     );
 };
