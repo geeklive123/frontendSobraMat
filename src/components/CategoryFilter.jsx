@@ -6,11 +6,31 @@ const CategoryFilter = () => {
     const [productosFiltrados, setProductosFiltrados] = useState([]);
     const [categorias, setCategorias] = useState([]);
     const [departamentos, setDepartamentos] = useState([
-        'Cochabamba', 'Santa Cruz', 'La Paz', 'Tarija', 'Potosí', 
+        'Cochabamba', 'Santa Cruz', 'La Paz', 'Tarija', 'Potosí',
         'Chuquisaca', 'Beni', 'Pando', 'Oruro'
     ]); // Departamentos estáticos
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    const [favoritos, setFavoritos] = useState([]);
+    const [agregarCarrito, setagregarCarrito] = useState([]);
+
+
+    const handleAddCart = (producto) => {
+        setagregarCarrito(prev => {
+            if (!prev.some(item => item.id === producto.id)) {
+                const newCart = [...prev, producto]; // Agrega el producto a favoritos
+                localStorage.setItem('agregarCarrito', JSON.stringify(newCart)); // Guardar en localStorage
+                return newCart;
+            }
+            return prev; // Si ya está en favoritos, no lo agrega
+        });
+        
+    };
+
+    const isInCart = (productoId) => {
+        return agregarCarrito.some(item => item.id === productoId); // Verifica si el producto está en favoritos
+    };
 
     const [estados] = useState(['Nuevo', 'Usado - Como Nuevo', 'Usado - Buen Estado', 'Usado - Aceptable']);
     const [estadoSeleccionado, setEstadoSeleccionado] = useState([]);
@@ -27,7 +47,7 @@ const CategoryFilter = () => {
             try {
                 const response = await fetch('https://sobramat-services.onrender.com/products/');
                 if (!response.ok) throw new Error('Error fetching data');
-                
+
                 const data = await response.json();
                 setProductos(data);
                 setProductosFiltrados(data);
@@ -40,13 +60,21 @@ const CategoryFilter = () => {
         fetchProductos();
     }, []);
 
+
+    useEffect(() => {
+        // Cargar los favoritos desde localStorage cuando se monta el componente
+        const storedFavoritos = localStorage.getItem('favoritos');
+        if (storedFavoritos) {
+            setFavoritos(JSON.parse(storedFavoritos));
+        }
+    }, []);
     // Llamada para obtener las categorías
     useEffect(() => {
         const fetchCategorias = async () => {
             try {
                 const response = await fetch('https://sobramat-services.onrender.com/categories/');
                 if (!response.ok) throw new Error('Error fetching categories');
-                
+
                 const data = await response.json();
                 setCategorias(data); // Guardar las categorías en el estado
             } catch (err) {
@@ -62,10 +90,10 @@ const CategoryFilter = () => {
             try {
                 const response = await fetch('https://sobramat-services.onrender.com/products/price-range');
                 if (!response.ok) throw new Error('Error fetching price range');
-                
+
                 const data = await response.json();
                 setPrecioMinimo(data.min); // Suponiendo que la API retorna un objeto { min: 0, max: 5000 }
-                setPrecioMaximo(data.max); 
+                setPrecioMaximo(data.max);
             } catch (err) {
                 setError(err.message);
             }
@@ -97,19 +125,19 @@ const CategoryFilter = () => {
     };
 
     const handleEstadoChange = (item) => {
-        setEstadoSeleccionado(prev => 
+        setEstadoSeleccionado(prev =>
             prev.includes(item) ? prev.filter(i => i !== item) : [...prev, item]
         );
     };
 
     const handleCategoriaChange = (item) => {
-        setCategoriaSeleccionada(prev => 
+        setCategoriaSeleccionada(prev =>
             prev.includes(item) ? prev.filter(i => i !== item) : [...prev, item]
         );
     };
 
     const handleDepartamentoChange = (item) => {
-        setDepartamentoSeleccionado(prev => 
+        setDepartamentoSeleccionado(prev =>
             prev.includes(item) ? prev.filter(i => i !== item) : [...prev, item]
         );
     };
@@ -155,6 +183,22 @@ const CategoryFilter = () => {
         );
     };
 
+
+    const handleAddToFavorites = (producto) => {
+        setFavoritos(prev => {
+            if (!prev.some(item => item.id === producto.id)) {
+                const newFavoritos = [...prev, producto]; // Agrega el producto a favoritos
+                localStorage.setItem('favoritos', JSON.stringify(newFavoritos)); // Guardar en localStorage
+                return newFavoritos;
+            }
+            return prev; // Si ya está en favoritos, no lo agrega
+        });
+        
+    };
+
+    const isInFavorites = (productoId) => {
+        return favoritos.some(item => item.id === productoId); // Verifica si el producto está en favoritos
+    };
     return (
         <div className="flex flex-col md:flex-row h-screen relative">
             {/* Panel de filtros */}
@@ -317,6 +361,18 @@ const CategoryFilter = () => {
                                         <p>Estado: {producto.estado_producto}</p>
                                         <p>Departamento: {producto.departamento}</p>
                                     </div>
+                                    <button
+                                        onClick={() => handleAddToFavorites(producto)}
+                                        className={`mt-2 py-1 px-4 rounded ${isInFavorites(producto.id) ? 'bg-green-500' : 'bg-yellow-500'} text-white`}
+                                    >
+                                        {isInFavorites(producto.id) ? 'Guardado en favoritos' : 'Agregar a favoritos'}
+                                    </button>
+                                    <button
+    onClick={() => handleAddCart(producto)}
+    className="mt-2 bg-yellow-500 text-white py-1 px-4 rounded"
+>
+    Agregar a Carrito
+</button>
                                 </div>
                             ))
                         ) : (

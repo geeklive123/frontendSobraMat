@@ -10,11 +10,14 @@ const InicioSesion = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
-  const [showPassword, setShowPassword] = useState(false); // Estado para mostrar/ocultar la contraseña
+  const [showPassword, setShowPassword] = useState(false); 
   const navigate = useNavigate();
 
   const handleInicioSesion = () => {
-    navigate('/registro'); // Redirige al registro
+    navigate('/registro'); 
+  };
+  const handleRecuperarContrasena = () => {
+    navigate('/RecuperarContrasena'); 
   };
 
   const handleLogin = async (e) => {
@@ -37,9 +40,9 @@ const InicioSesion = () => {
       const data = await response.json();
       console.log('Inicio de sesión exitoso', data);
 
-      setUser(data.user);  // Establece el usuario en el contexto global
-      localStorage.setItem('user', JSON.stringify(data.user)); // Guarda el usuario en el localStorage
-      navigate('/listMaterial'); // Redirige a la lista de materiales
+      setUser(data.user);  
+      localStorage.setItem('user', JSON.stringify(data.user)); 
+      navigate('/listMaterial');
 
     } catch (error) {
       console.error('Error:', error);
@@ -52,22 +55,22 @@ const InicioSesion = () => {
       className="min-h-screen bg-cover bg-center flex flex-col justify-center items-center"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
-      {/* Capa oscura encima de la imagen de fondo */}
+      {}
       <div 
         className="absolute top-0 left-0 right-0 bottom-0 bg-black opacity-50 z-0"
       ></div>
 
-      {/* Contenedor para el logo y el título */}
+      {}
       <div className="flex flex-col justify-center items-center mt-10 sm:mt-20 mb-8 z-10">
         <img 
           src={logo} 
           alt="Logo"
-          className="h-24 w-auto mb-4 mx-auto"  // Asegura que el logo se alinee al centro
+          className="h-24 w-auto mb-4 mx-auto"  
         />
         <h2 className="text-2xl font-semibold text-yellow-400 text-center">INICIAR SESIÓN</h2>
       </div>
 
-      {/* Formulario de inicio de sesión */}
+      {}
       <div className="w-full max-w-md p-8 space-y-6 bg-[#F2A649] rounded-lg shadow-md mt-6 sm:mt-10 mb-4 sm:mb-0 z-10">
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
@@ -86,7 +89,7 @@ const InicioSesion = () => {
           <div className="relative">
             <label htmlFor="password" className="block text-sm font-medium text-gray-600">Contraseña</label>
             <input
-              type={showPassword ? 'text' : 'password'} // Cambia entre 'text' y 'password' dependiendo del estado
+              type={showPassword ? 'text' : 'password'} 
               id="password"
               className="w-full px-4 py-2 mt-1 text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-200"
               placeholder="********"
@@ -97,9 +100,9 @@ const InicioSesion = () => {
             <button
               type="button"
               className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 mt-3 mr-2"
-              onClick={() => setShowPassword(!showPassword)} // Alterna el estado para mostrar/ocultar la contraseña
+              onClick={() => setShowPassword(!showPassword)} 
             >
-              {showPassword ? <FaEyeSlash size={15} /> : <FaEye size={15} />} {/* Muestra un icono dependiendo del estado */}
+              {showPassword ? <FaEyeSlash size={15} /> : <FaEye size={15} />} {}
             </button>
           </div>
 
@@ -118,7 +121,7 @@ const InicioSesion = () => {
             ¿Olvidaste tu contraseña?{' '}
             <span
               className="text-blue-500 cursor-pointer hover:text-blue-700"
-              onClick={() => navigate('/recuperar-contrasena')} // Cambia esta ruta según tu implementación
+              onClick={handleRecuperarContrasena} 
             >
               Recuperar aquí
             </span>
@@ -128,7 +131,7 @@ const InicioSesion = () => {
             ¿No tienes cuenta?{' '}
             <span
               className="text-blue-500 cursor-pointer hover:text-blue-700"
-              onClick={handleInicioSesion} // Redirige al registro
+              onClick={handleInicioSesion} 
             >
               Regístrate aquí
             </span>
