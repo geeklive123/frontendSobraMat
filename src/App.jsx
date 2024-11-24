@@ -14,9 +14,10 @@ import RestablecerContrasena from './components/restablecerContrasena';
 import Wishlist from './components/Wishlist';
 import AgregarCarrito from './components/agregarCarrito';
 import CalificarVista from './components/CalificarVista';
-
+import ComprarProducto from './components/ComprarProducto';
 import OrderPickup  from './components/OrderPickup';
 import SolicitudEntrega  from './components/SolicituEntrega';
+import Resenas from './components/Resenas';
 const App = () => {
   const [isUserLogged, setIsUserLogged] = useState(false);
   const location = useLocation(); // Para detectar cambios en la ruta.
@@ -47,6 +48,8 @@ const App = () => {
         <Route path="/Wishlist" element={<Wishlist/>} /> 
         <Route path="/AgregarCarrito" element={<AgregarCarrito/>} />      
         <Route path="/CalificarVista" element={<CalificarVista/>} />      
+        <Route path="/ComprarProducto" element={<ComprarProducto/>} />  
+        <Route path="/Resenas" element={<Resenas/>} />        
          </Routes>
     </div>
   );

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import 'font-awesome/css/font-awesome.min.css';
+import { useNavigate } from 'react-router-dom';
 
 const CategoryFilter = () => {
+    const navigate = useNavigate();
     const [productos, setProductos] = useState([]);
     const [productosFiltrados, setProductosFiltrados] = useState([]);
     const [categorias, setCategorias] = useState([]);
@@ -14,8 +16,71 @@ const CategoryFilter = () => {
 
     const [favoritos, setFavoritos] = useState([]);
     const [agregarCarrito, setagregarCarrito] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState(null);
+    const [rating, setRating] = useState(0);
+    const [reviewText, setReviewText] = useState("");
+    const [reviews, setReviews] = useState([]);
+    const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+    const [productToBuy, setProductToBuy] = useState(null);
+  
+    const handleRedirectComprarProducto = () => {
+        navigate('/ComprarProducto');
+      };
+      const handleRedirectResena = () => {
+        navigate('/Resenas');
+      };
+    // Función para abrir el modal de confirmación
+    const handleBuyNow = (product) => {
+      setProductToBuy(product); // Guardamos el producto que el usuario quiere comprar
+      setIsConfirmModalOpen(true); // Abrimos el modal de confirmación
+    };
+  
+    // Función para manejar la confirmación de compra
+    const handleConfirmPurchase = () => {
+      if (productToBuy) {
+        // Lógica para finalizar la compra (puedes redirigir a una página, realizar una llamada API, etc.)
+        alert(`Compra confirmada para el producto: ${productToBuy.nombre_producto}`);
+        closeConfirmModal(); // Cerramos el modal de confirmación
+        closeModal(); // Cerramos el modal de producto
+      }
+    };
+  
+    // Función para cerrar el modal de confirmación
+    const closeConfirmModal = () => {
+      setIsConfirmModalOpen(false);
+      setProductToBuy(null); // Limpiamos el producto seleccionado para la compra
+    };
+    const openModal = (producto) => {
+        setSelectedProduct(producto);
+        setIsModalOpen(true);
+    };
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setSelectedProduct(null);
+        setRating(0); // Reset the rating when modal is closed
+        setReviewText(""); // Reset the review text
+    };
 
 
+    const handleRating = (rate) => {
+        if (rate >= 1 && rate <= 5) {
+            setRating(rate);
+        }
+    };
+    const handleSubmit = () => {
+        if (rating > 0 && reviewText.trim()) {
+            setReviews([...reviews, { rating, text: reviewText }]);
+            setRating(0);
+            setReviewText("");
+        } else {
+            alert("Por favor, selecciona una calificación válida y escribe una reseña.");
+        }
+    };
+    const averageRating =
+        reviews.length > 0
+            ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length
+            : 0;
     const handleAddCart = (producto) => {
         setagregarCarrito(prev => {
             if (!prev.some(item => item.id === producto.id)) {
@@ -25,8 +90,10 @@ const CategoryFilter = () => {
             }
             return prev; // Si ya está en favoritos, no lo agrega
         });
-        
+
     };
+
+
 
     const isInCart = (productoId) => {
         return agregarCarrito.some(item => item.id === productoId); // Verifica si el producto está en favoritos
@@ -40,6 +107,7 @@ const CategoryFilter = () => {
     const [departamentoSeleccionado, setDepartamentoSeleccionado] = useState([]);
     const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(true);
     const [precioError, setPrecioError] = useState(false);
+
 
     // Llamada para obtener productos
     useEffect(() => {
@@ -193,7 +261,7 @@ const CategoryFilter = () => {
             }
             return prev; // Si ya está en favoritos, no lo agrega
         });
-        
+
     };
 
     const isInFavorites = (productoId) => {
@@ -361,18 +429,27 @@ const CategoryFilter = () => {
                                         <p>Estado: {producto.estado_producto}</p>
                                         <p>Departamento: {producto.departamento}</p>
                                     </div>
-                                    <button
-                                        onClick={() => handleAddToFavorites(producto)}
-                                        className={`mt-2 py-1 px-4 rounded ${isInFavorites(producto.id) ? 'bg-green-500' : 'bg-yellow-500'} text-white`}
-                                    >
-                                        {isInFavorites(producto.id) ? 'Guardado en favoritos' : 'Agregar a favoritos'}
-                                    </button>
-                                    <button
-    onClick={() => handleAddCart(producto)}
-    className="mt-2 bg-yellow-500 text-white py-1 px-4 rounded"
->
-    Agregar a Carrito
-</button>
+                                    <div className="flex space-x-4">
+                                        <button
+                                            onClick={() => handleAddToFavorites(producto)}
+                                            className={`mt-2 py-1 px-4 rounded ${isInFavorites(producto.id) ? 'bg-green-500' : 'bg-yellow-500'} text-white`}
+                                        >
+                                            {isInFavorites(producto.id) ? 'Guardado en favoritos' : 'Agregar a favoritos'}
+                                        </button>
+                                        <button
+                                            onClick={() => handleAddCart(producto)}
+                                            className="mt-2 bg-yellow-500 text-white py-1 px-4 rounded"
+                                        >
+                                            Agregar a Carrito
+                                        </button>
+                                        <button
+                                            onClick={() => openModal(producto)} // Abre el modal con el producto
+                                            className="mt-2 bg-blue-500 text-white py-1 px-4 rounded"
+                                        >
+                                            Comprar Ahora
+                                        </button>
+                                       
+                                    </div>
                                 </div>
                             ))
                         ) : (
@@ -381,6 +458,96 @@ const CategoryFilter = () => {
                     </div>
                 </div>
             </div>
+
+
+           {/* Modal de Producto */}
+      {isModalOpen && selectedProduct && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-4 rounded-lg w-96 relative">
+            <button
+              onClick={closeModal} // Cerrar el modal de producto
+              className="absolute top-2 right-2 text-gray-500"
+            >
+              X
+            </button>
+            <h2 className="text-xl font-bold mb-2">{selectedProduct.nombre_producto}</h2>
+            <img
+              src={selectedProduct.imagen_url}
+              alt={selectedProduct.nombre_producto}
+              className="w-full h-64 object-cover rounded mb-4"
+            />
+            <p>{selectedProduct.descripcion}</p>
+            <p className="mt-2 text-lg font-semibold">{`$${selectedProduct.precio}`}</p>
+            <p className="mt-2">Estado: {selectedProduct.estado_producto}</p>
+            <p className="mt-2">Departamento: {selectedProduct.departamento}</p>
+            <div className="mt-4">
+        <h3 className="text-lg font-semibold mb-2">Calificaciones:</h3>
+        {selectedProduct.calificaciones && selectedProduct.calificaciones.length > 0 ? (
+          <ul className="space-y-2">
+            {selectedProduct.calificaciones.map((calificacion, index) => (
+              <li
+                key={index}
+                className="border border-gray-300 p-2 rounded"
+              >
+                <p className="font-semibold">Usuario: {calificacion.usuario}</p>
+                <p>Comentario: {calificacion.comentario}</p>
+                <p>Calificación: {`${calificacion.puntuacion} / 5`}</p>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-gray-500">Este producto aún no tiene calificaciones.</p>
+        )}
+      </div>
+      <div className="mt-4 flex justify-between">
+      <button
+          onClick={() => handleRedirectResena(selectedProduct)} // Redirigir a la página de reseñas
+          className="bg-blue-500 text-white py-1 px-4 rounded"
+        >
+          Dar Reseña
+        </button>
+        <button
+          onClick={() => handleBuyNow(selectedProduct)} // Abrir el modal de confirmación
+          className="bg-green-500 text-white py-1 px-4 rounded"
+        >
+          Comprar
+        </button>
+       
+      </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Confirmación de Compra */}
+      {isConfirmModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-4 rounded-lg w-96 relative">
+            <h2 className="text-xl font-bold mb-2">¿Estás seguro de que deseas comprar este producto?</h2>
+            {productToBuy && (
+              <>
+                <p className="mb-2">Producto: {productToBuy.nombre_producto}</p>
+                <p className="mb-4">Precio: ${productToBuy.precio}</p>
+              </>
+            )}
+            <div className="flex justify-between">
+              <button
+                onClick={handleRedirectComprarProducto} // Confirmar compra
+                className="bg-blue-500 text-white py-1 px-4 rounded"
+              >
+                Confirmar
+              </button>
+              <button
+                onClick={closeConfirmModal} // Cancelar la compra
+                className="bg-red-500 text-white py-1 px-4 rounded"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+            
         </div>
     );
 };
