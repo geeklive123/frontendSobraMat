@@ -1,31 +1,66 @@
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 import CardMaterial from './cardMaterial';
+import { useNavigate } from "react-router-dom";
+
 
 const RestablecerContrasena = () => {
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isConfirmed, setIsConfirmed] = useState(false);
+  
+  const emailRecuperado = localStorage.getItem('emailRecuperacion');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     // Validaciones
     if (!isConfirmed) {
       setModalMessage("Confirme el cambio de contraseña");
       setIsModalOpen(true);
       return;
     }
-
+  
     if (newPassword !== confirmPassword) {
       setModalMessage("No coinciden las contraseñas");
       setIsModalOpen(true);
       return;
     }
-
-    setModalMessage("Contraseña actualizada correctamente");
-    setIsModalOpen(true);
+  
+    // Obtener el email del localStorage
+    const emailRecuperado = localStorage.getItem('emailRecuperacion');
+  
+    // Crear el cuerpo de la solicitud
+    const body = {
+      correo_electronico: emailRecuperado,
+      nueva_contrasena: newPassword,
+    };
+  
+    try {
+      const response = await fetch('https://sobramat-services.onrender.com/auth/update-password', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Error al actualizar la contraseña');
+      }
+  
+      const data = await response.json()
+      .then(() => setModalMessage("Contraseña actualizada correctamente"))
+      .finally(() => navigate('/iniciarSesion'))
+      
+      
+    } catch (error) {
+      setModalMessage(error.message || "Ocurrió un error al actualizar la contraseña");
+    } finally {
+      setIsModalOpen(true);
+    }
   };
 
   const closeModal = () => {
