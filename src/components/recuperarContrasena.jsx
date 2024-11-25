@@ -1,20 +1,32 @@
 
-import React from 'react';
+import React, { useEffect , useState}from 'react';
 import CardMaterial from './cardMaterial';
 import { useNavigate } from 'react-router-dom';
-import { useState } from "react";
+
 
 const RecuperarContrasena = () => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const navigate = useNavigate();
+  const [myUser, setMyUser] = useState(null);
+  const [emailRecuperacion, setEmailRecuperacion] = useState(null);
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user) {
+      setMyUser(user);
+      console.log(myUser)
+    }
+  }, [myUser]);
 
   const handleEnviar = (e) => {
     e.preventDefault();
     setModalVisible(true); // Muestra el modal
   };
   const handleRestablecerContrasena = () => {
-    navigate('/RestablecerContrasena'); 
+    localStorage.setItem('emailRecuperacion',emailRecuperacion);
+    
+    navigate('/RestablecerContrasena');
   };
   const handleCerrarModal = () => {
     setModalVisible(false); // Cierra el modal
@@ -42,11 +54,13 @@ const RecuperarContrasena = () => {
                 📧
               </span>
               <input
+                value={emailRecuperacion}
                 type="email"
                 id="email"
                 placeholder="Ingrese tu correo electrónico"
                 className="w-full px-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300 text-gray-700"
                 required
+                onChange={(e) => setEmailRecuperacion(e.target.value)}
               />
             </div>
           </div>
