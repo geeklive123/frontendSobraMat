@@ -179,4 +179,4 @@ const ComprarProducto = () => {
   );
 };
 
-export default ComprarProducto;
+export default ComprarProducto  ;
