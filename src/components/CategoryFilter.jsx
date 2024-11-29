@@ -408,56 +408,58 @@ const CategoryFilter = () => {
 
             {/* Mostrar los productos filtrados */}
             <div className="flex-grow p-4" style={{ overflowY: 'auto', maxHeight: '100vh' }}>
-                <h2 className="font-bold text-xl">
-                    {isAnyFilterActive() ? 'FILTRADOS RECIENTES' : 'TIENDA'}
-                </h2>
-                <div className="border border-gray-300 bg-[#F2EAC2] p-4 mt-4 rounded">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        {productosFiltrados.length > 0 ? (
-                            productosFiltrados.map((producto) => (
-                                <div key={producto.id} className="border border-gray-300 bg-white p-2 rounded flex flex-col items-center">
-                                    <div className="w-full h-0 pb-[100%] relative">
-                                        <img
-                                            src={producto.imagen_url}
-                                            alt={producto.nombre_producto}
-                                            className="absolute top-0 left-0 w-full h-full rounded"
-                                        />
-                                    </div>
-                                    <div className="mt-2 text-center">
-                                        <p>Nombre: {producto.nombre_producto}</p>
-                                        <p>Precio: ${producto.precio}</p>
-                                        <p>Estado: {producto.estado_producto}</p>
-                                        <p>Departamento: {producto.departamento}</p>
-                                    </div>
-                                    <div className="flex space-x-4">
-                                        <button
-                                            onClick={() => handleAddToFavorites(producto)}
-                                            className={`mt-2 py-1 px-4 rounded ${isInFavorites(producto.id) ? 'bg-green-500' : 'bg-yellow-500'} text-white`}
-                                        >
-                                            {isInFavorites(producto.id) ? 'Guardado en favoritos' : 'Agregar a favoritos'}
-                                        </button>
-                                        <button
-                                            onClick={() => handleAddCart(producto)}
-                                            className="mt-2 bg-yellow-500 text-white py-1 px-4 rounded"
-                                        >
-                                            Agregar a Carrito
-                                        </button>
-                                        <button
-                                            onClick={() => openModal(producto)} // Abre el modal con el producto
-                                            className="mt-2 bg-blue-500 text-white py-1 px-4 rounded"
-                                        >
-                                            Comprar Ahora
-                                        </button>
-                                       
-                                    </div>
-                                </div>
-                            ))
-                        ) : (
-                            <p>No se encontraron productos.</p>
-                        )}
+    <h2 className="font-bold text-xl">
+        {isAnyFilterActive() ? 'FILTRADOS RECIENTES' : 'TIENDA'}
+    </h2>
+    <div className="border border-gray-300 bg-[#F2EAC2] p-4 mt-4 rounded">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {productosFiltrados.length > 0 ? (
+                productosFiltrados.map((producto) => (
+                    <div key={producto.id} className="border border-gray-300 bg-white p-2 rounded flex flex-col items-center">
+                        <div className="w-full h-0 pb-[100%] relative">
+                            {/* Contenedor de imagen con el corazón encima */}
+                            <img
+                                src={producto.imagen_url}
+                                alt={producto.nombre_producto}
+                                className="absolute top-0 left-0 w-full h-full rounded"
+                            />
+                            <div className="absolute top-2 right-2 z-10">
+                                <button
+                                    onClick={() => handleAddToFavorites(producto)}
+                                    className={`text-2xl ${isInFavorites(producto.id) ? 'text-red-500' : 'text-gray-500'}`}
+                                >
+                                    ❤️
+                                </button>
+                            </div>
+                        </div>
+                        <div className="mt-2 text-center">
+                            <p>Nombre: {producto.nombre_producto}</p>
+                            <p>Precio: ${producto.precio}</p>
+                            <p>Estado: {producto.estado_producto}</p>
+                            <p>Departamento: {producto.departamento}</p>
+                        </div>
+                        <div className="flex space-x-4">
+                            <button
+                                onClick={() => handleAddCart(producto)}
+                                className="mt-2 bg-yellow-500 text-white py-1 px-4 rounded"
+                            >
+                                Agregar a Carrito
+                            </button>
+                            <button
+                                onClick={() => openModal(producto)} // Abre el modal con el producto
+                                className="mt-2 bg-blue-500 text-white py-1 px-4 rounded"
+                            >
+                                Comprar Ahora
+                            </button>
+                        </div>
                     </div>
-                </div>
-            </div>
+                ))
+            ) : (
+                <p>No se encontraron productos.</p>
+            )}
+        </div>
+    </div>
+</div>
 
 
            {/* Modal de Producto */}

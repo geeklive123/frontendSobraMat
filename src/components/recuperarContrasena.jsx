@@ -39,7 +39,7 @@ const RecuperarContrasena = () => {
         {/* Título */}
         <h2 className="text-xl font-bold text-center">Recuperar contraseña</h2>
         <p className="text-sm text-center text-white">
-          Ingresa tu correo electrónico para recibir las instrucciones
+          Ingresa tu correo electrónico para verificar su correo y pueda cambiar la contraseña
         </p>
 
         {/* Formulario */}
@@ -89,13 +89,13 @@ const RecuperarContrasena = () => {
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg text-center space-y-4">
             <p className="text-black text-sm">
-              Se han enviado las instrucciones a tu correo
+            Se ha verificado su correo 
             </p>
             <button
               onClick={handleRestablecerContrasena}
               className="px-6 py-2 bg-green-500 text-white font-medium rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300"
             >
-              Aceptar
+             Continuar
             </button>
           </div>
         </div>

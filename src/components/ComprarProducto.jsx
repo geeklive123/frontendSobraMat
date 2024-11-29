@@ -15,26 +15,32 @@ const ComprarProducto = () => {
   const validateForm = () => {
     const newErrors = {};
 
+    // Validación del nombre (solo permite caracteres alfabéticos)
     if (!formValues.nombre.trim()) {
       newErrors.nombre = "El nombre es obligatorio.";
+    } else if (!/^[A-Za-z\s]+$/.test(formValues.nombre)) {
+      newErrors.nombre = "El nombre solo puede contener letras.";
     }
 
+    // Validación del teléfono (debe comenzar con 6 o 7 y tener entre 7 a 10 dígitos)
     if (!formValues.telefono.trim()) {
       newErrors.telefono = "El teléfono es obligatorio.";
-    } else if (!/^\+?\d{7,15}$/.test(formValues.telefono)) {
-      newErrors.telefono = "Ingrese un teléfono válido.";
+    } else if (!/^[67]\d{7,10}$/.test(formValues.telefono)) {
+      newErrors.telefono = "Ingrese un número válido que comience con 6 o 7.";
     }
 
+    // Validación del correo electrónico
     if (!formValues.email.trim()) {
       newErrors.email = "El correo electrónico es obligatorio.";
-    } else if (
-      !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(formValues.email.trim())
-    ) {
+    } else if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(formValues.email.trim())) {
       newErrors.email = "Ingrese un correo válido.";
     }
 
+    // Validación del mensaje (no más de 400 caracteres)
     if (!formValues.mensaje.trim()) {
       newErrors.mensaje = "El mensaje es obligatorio.";
+    } else if (formValues.mensaje.length > 400) {
+      newErrors.mensaje = "El mensaje no puede superar los 400 caracteres.";
     }
 
     setErrors(newErrors);
@@ -67,10 +73,10 @@ const ComprarProducto = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-black bg-opacity-50">
+    <div className="flex items-center justify-center min-h-screen bg-black bg-opacity-50 p-4">
       <form
         onSubmit={handleSubmit}
-        className="bg-orange-400 p-6 rounded-lg shadow-lg w-96"
+        className="bg-orange-400 p-6 rounded-lg shadow-lg w-full sm:w-96"
       >
         <h2 className="text-xl font-bold text-center text-black mb-4">
           Confirmar Compra
@@ -86,13 +92,9 @@ const ComprarProducto = () => {
             placeholder="Ingrese su nombre"
             value={formValues.nombre}
             onChange={handleInputChange}
-            className={`w-full p-2 rounded border ${
-              errors.nombre ? "border-red-500" : "border-gray-300"
-            }`}
+            className={`w-full p-2 rounded border ${errors.nombre ? "border-red-500" : "border-gray-300"}`}
           />
-          {errors.nombre && (
-            <p className="text-red-500 text-sm">{errors.nombre}</p>
-          )}
+          {errors.nombre && <p className="text-red-500 text-sm">{errors.nombre}</p>}
         </div>
 
         <div className="mb-4">
@@ -105,13 +107,9 @@ const ComprarProducto = () => {
             placeholder="+591 Ingrese un número válido"
             value={formValues.telefono}
             onChange={handleInputChange}
-            className={`w-full p-2 rounded border ${
-              errors.telefono ? "border-red-500" : "border-gray-300"
-            }`}
+            className={`w-full p-2 rounded border ${errors.telefono ? "border-red-500" : "border-gray-300"}`}
           />
-          {errors.telefono && (
-            <p className="text-red-500 text-sm">{errors.telefono}</p>
-          )}
+          {errors.telefono && <p className="text-red-500 text-sm">{errors.telefono}</p>}
         </div>
 
         <div className="mb-4">
@@ -124,13 +122,9 @@ const ComprarProducto = () => {
             placeholder="Ingrese un correo válido"
             value={formValues.email}
             onChange={handleInputChange}
-            className={`w-full p-2 rounded border ${
-              errors.email ? "border-red-500" : "border-gray-300"
-            }`}
+            className={`w-full p-2 rounded border ${errors.email ? "border-red-500" : "border-gray-300"}`}
           />
-          {errors.email && (
-            <p className="text-red-500 text-sm">{errors.email}</p>
-          )}
+          {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
         </div>
 
         <div className="mb-6">
@@ -142,14 +136,10 @@ const ComprarProducto = () => {
             placeholder="Ingrese un mensaje para solicitar compra"
             value={formValues.mensaje}
             onChange={handleInputChange}
-            className={`w-full p-2 rounded border ${
-              errors.mensaje ? "border-red-500" : "border-gray-300"
-            }`}
+            className={`w-full p-2 rounded border ${errors.mensaje ? "border-red-500" : "border-gray-300"}`}
             rows="4"
           />
-          {errors.mensaje && (
-            <p className="text-red-500 text-sm">{errors.mensaje}</p>
-          )}
+          {errors.mensaje && <p className="text-red-500 text-sm">{errors.mensaje}</p>}
         </div>
 
         <button
@@ -179,4 +169,4 @@ const ComprarProducto = () => {
   );
 };
 
-export default ComprarProducto  ;
+export default ComprarProducto;
