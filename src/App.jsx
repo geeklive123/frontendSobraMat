@@ -18,6 +18,7 @@ import ComprarProducto from './components/ComprarProducto';
 import OrderPickup  from './components/OrderPickup';
 import SolicitudEntrega  from './components/SolicituEntrega';
 import Resenas from './components/Resenas';
+import FinalizarCompra from './components/FinalizarCompra';
 const App = () => {
   const [isUserLogged, setIsUserLogged] = useState(false);
   const location = useLocation(); // Para detectar cambios en la ruta.
@@ -50,6 +51,7 @@ const App = () => {
         <Route path="/CalificarVista" element={<CalificarVista/>} />      
         <Route path="/ComprarProducto" element={<ComprarProducto/>} />  
         <Route path="/Resenas" element={<Resenas/>} />        
+        <Route path="/FinalizarCompra" element={<FinalizarCompra/>} />        
          </Routes>
     </div>
   );

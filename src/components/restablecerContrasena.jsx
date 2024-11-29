@@ -181,7 +181,7 @@ const RestablecerContrasena = () => {
                 Confirmar
               </button>
             </div>
-          </div>
+          </div>  
         </div>
       )}
     </div>

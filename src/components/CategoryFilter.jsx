@@ -23,6 +23,7 @@ const CategoryFilter = () => {
     const [reviews, setReviews] = useState([]);
     const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
     const [productToBuy, setProductToBuy] = useState(null);
+    const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   
     const handleRedirectComprarProducto = () => {
         navigate('/ComprarProducto');
@@ -81,18 +82,20 @@ const CategoryFilter = () => {
         reviews.length > 0
             ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length
             : 0;
-    const handleAddCart = (producto) => {
-        setagregarCarrito(prev => {
-            if (!prev.some(item => item.id === producto.id)) {
-                const newCart = [...prev, producto]; // Agrega el producto a favoritos
-                localStorage.setItem('agregarCarrito', JSON.stringify(newCart)); // Guardar en localStorage
-                return newCart;
-            }
-            return prev; // Si ya está en favoritos, no lo agrega
-        });
-
-    };
-
+            const handleAddCart = (producto) => {
+                setagregarCarrito(prev => {
+                    if (!prev.some(item => item.id === producto.id)) {
+                        const newCart = [...prev, producto]; // Agrega el producto al carrito
+                        localStorage.setItem('agregarCarrito', JSON.stringify(newCart)); // Guardar en localStorage
+                        setShowSuccessMessage(true); // Mostrar mensaje de éxito
+                        setTimeout(() => {
+                            setShowSuccessMessage(false); // Ocultar mensaje después de 3 segundos
+                        }, 3000);
+                        return newCart;
+                    }
+                    return prev; // Si ya está en el carrito, no lo agrega
+                });
+            };
 
 
     const isInCart = (productoId) => {
@@ -439,12 +442,18 @@ const CategoryFilter = () => {
                             <p>Departamento: {producto.departamento}</p>
                         </div>
                         <div className="flex space-x-4">
-                            <button
-                                onClick={() => handleAddCart(producto)}
-                                className="mt-2 bg-yellow-500 text-white py-1 px-4 rounded"
-                            >
-                                Agregar a Carrito
-                            </button>
+                        <button 
+    onClick={() => handleAddCart(producto)}
+    className="mt-2 bg-yellow-500 text-white py-1 px-4 rounded"
+>
+    Agregar a Carrito
+</button>
+
+{showSuccessMessage && (
+    <div className="mt-2 text-green-500">
+        Producto agregado al carrito!
+    </div>
+)}
                             <button
                                 onClick={() => openModal(producto)} // Abre el modal con el producto
                                 className="mt-2 bg-blue-500 text-white py-1 px-4 rounded"

@@ -69,7 +69,7 @@ const ComprarProducto = () => {
 
   const handleModalClose = () => {
     setIsSuccessModalOpen(false);
-    navigate("/listMaterial"); // Redirige a `ListMaterial`
+    navigate("/FinalizarCompra"); // Redirige a `ListMaterial`
   };
 
   return (

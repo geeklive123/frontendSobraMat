@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FaShoppingCart, FaBookmark, FaSearch, FaBars, FaTimes } from 'react-icons/fa';
+import { FaShoppingCart, FaBookmark, FaSearch, FaBars, FaTimes , FaHeart } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
 const CustomNavbar = ({ setIsLoggedIn }) => {
@@ -97,7 +97,7 @@ const CustomNavbar = ({ setIsLoggedIn }) => {
   onClick={handleFavoritos} // Trigger the redirect
   className="text-white text-lg cursor-pointer" // Add cursor pointer for better UX
 >
-  <FaBookmark />
+<FaHeart /> 
 </a>
         {myUser && (
           <>
